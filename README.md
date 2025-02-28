@@ -1,3 +1,15 @@
 # NC News Seeding
 
-- Instructions for this sprint can be found at https://l2c.northcoders.com/courses/be/seeding-nc-news
+## Setting up the databases
+
+Create two files to store relevant environmental variables as follows:
+
+**Development**
+
+- filename: .env.development
+- contents: PGDATABASE=nc_news
+
+**Test**
+
+- filename: .env.test
+- contents: PGDATABASE=nc_new_test

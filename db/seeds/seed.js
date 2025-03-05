@@ -10,7 +10,7 @@ const createTopics = (topicData) => {
   return db
     .query(
       `CREATE TABLE topics
-  (description VARCHAR NOT NULL, slug VARCHAR NOT NULL,img_url VARCHAR(1000), PRIMARY KEY (slug))`
+  (slug VARCHAR NOT NULL, description VARCHAR NOT NULL, img_url VARCHAR(1000), PRIMARY KEY (slug))`
     )
     .then(() => {
       const formattedTopics = topicData.map(

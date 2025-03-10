@@ -4,9 +4,19 @@ const handlePsqlError = (err, req, res, next) => {
   } else next(err);
 };
 
+const handleCustomError = (err, req, res, next) => {
+  if (err.status) {
+    res.status(err.status).send({ status: err.status, msg: err.msg });
+  } else next(err);
+};
+
 const handleServerError = (err, req, res, next) => {
   console.log(err);
   res.status(500).send({ msg: 'internal server error' });
 };
 
-module.exports = { handlePsqlError, handleServerError };
+module.exports = {
+  handlePsqlError,
+  handleCustomError,
+  handleServerError,
+};

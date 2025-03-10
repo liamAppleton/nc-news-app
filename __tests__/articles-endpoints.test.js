@@ -26,13 +26,22 @@ describe('GET /api/articles/:article_id', () => {
         });
       });
   });
-  test('400: Reponds with "bad request" when given an invalid article id', () => {
+  test('400: Responds with "bad request" when given an invalid article id', () => {
     return request(app)
       .get('/api/articles/banana')
       .expect(400)
       .then(({ body }) => {
         expect(body.status).toBe(400);
         expect(body.msg).toBe('bad request');
+      });
+  });
+  test('404: Responds with "article not found" when given an article id that does not exist', () => {
+    return request(app)
+      .get('/api/articles/99999')
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.status).toBe(404);
+        expect(body.msg).toBe('article not found');
       });
   });
 });

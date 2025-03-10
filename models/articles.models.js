@@ -30,7 +30,8 @@ const fetchCommentsByArticleId = (articleId) => {
   return db
     .query(
       `SELECT comment_id, article_id, body, votes, author, created_at
-    FROM comments WHERE article_id = $1`,
+    FROM comments WHERE article_id = $1
+    ORDER BY created_at DESC`,
       [articleId]
     )
     .then(({ rows }) => {

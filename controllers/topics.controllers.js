@@ -1,7 +1,8 @@
 const { fetchTopics } = require('../models');
 
 const getTopics = (req, res) => {
-  fetchTopics().then((topics) => {
+  const { query } = req;
+  fetchTopics(query).then((topics) => {
     res.status(200).send({ topics: topics });
   });
 };

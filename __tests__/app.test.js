@@ -36,4 +36,17 @@ describe('GET /api/topics', () => {
         });
       });
   });
+  test('200: Responds with an array of topics sorted by slug', () => {
+    return request(app)
+      .get('/api/topics?sort_by=slug')
+      .expect(200)
+      .then(({ body: { topics } }) => {
+        const topicsSorted = topics.toSorted((a, b) => {
+          return a.slug.localeCompare(b.slug);
+        });
+        expect(topics).toEqual(topicsSorted);
+      });
+  });
 });
+
+// 400: Responds with bad request when sort_by invalid column name

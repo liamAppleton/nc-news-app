@@ -1,3 +1,7 @@
+const handleNotARouteError = (req, res, next) => {
+  res.status(404).send({ status: 404, msg: 'not a route' });
+};
+
 const handlePsqlError = (err, req, res, next) => {
   if (err.code === '42703' || err.code == '22P02') {
     res.status(400).send({ status: 400, msg: 'bad request' });
@@ -16,6 +20,7 @@ const handleServerError = (err, req, res, next) => {
 };
 
 module.exports = {
+  handleNotARouteError,
   handlePsqlError,
   handleCustomError,
   handleServerError,

@@ -1,19 +1,24 @@
 const express = require('express');
 const app = express();
-const endpoints = require('./endpoints.json');
-const { getTopics } = require('./controllers');
+const { getEndpoints, getTopics, getArticleById } = require('./controllers');
 const {
+  handleNotARouteError,
   handlePsqlError,
+  handleCustomError,
   handleServerError,
 } = require('./error-handlers/error-handlers.controllers');
 
-app.get('/api', (req, res) => {
-  res.status(200).send({ endpoints: endpoints });
-});
+app.get('/api', getEndpoints);
 
 app.get('/api/topics', getTopics);
 
+app.get('/api/articles/:article_id', getArticleById);
+
+app.all('*', handleNotARouteError);
+
 app.use(handlePsqlError);
+
+app.use(handleCustomError);
 
 app.use(handleServerError);
 

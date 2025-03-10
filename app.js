@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const { getEndpoints, getTopics } = require('./controllers');
+const { getEndpoints, getTopics, getArticleById } = require('./controllers');
 const {
   handlePsqlError,
   handleServerError,
@@ -9,6 +9,8 @@ const {
 app.get('/api', getEndpoints);
 
 app.get('/api/topics', getTopics);
+
+app.get('/api/articles/:article_id', getArticleById);
 
 app.use(handlePsqlError);
 

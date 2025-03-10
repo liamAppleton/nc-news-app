@@ -47,6 +47,15 @@ describe('GET /api/topics', () => {
         expect(topics).toEqual(topicsSorted);
       });
   });
+  test('400: Responds with "bad request" when query includes invalid column name', () => {
+    return request(app)
+      .get('/api/topics?sort_by=mug')
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.status).toBe(400);
+        expect(body.msg).toBe('bad request');
+      });
+  });
 });
 
 // 400: Responds with bad request when sort_by invalid column name

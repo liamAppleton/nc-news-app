@@ -4,6 +4,7 @@ const endpoints = require('./endpoints.json');
 const { getTopics } = require('./controllers');
 const {
   handlePsqlError,
+  handleServerError,
 } = require('./error-handlers/error-handlers.controllers');
 
 app.get('/api', (req, res) => {
@@ -13,5 +14,7 @@ app.get('/api', (req, res) => {
 app.get('/api/topics', getTopics);
 
 app.use(handlePsqlError);
+
+app.use(handleServerError);
 
 module.exports = app;

@@ -26,4 +26,16 @@ const fetchArticles = () => {
     });
 };
 
-module.exports = { fetchArticleById, fetchArticles };
+const fetchCommentsByArticleId = (articleId) => {
+  return db
+    .query(
+      `SELECT comment_id, article_id, body, votes, author, created_at
+    FROM comments WHERE article_id = $1`,
+      [articleId]
+    )
+    .then(({ rows }) => {
+      return rows;
+    });
+};
+
+module.exports = { fetchArticleById, fetchArticles, fetchCommentsByArticleId };

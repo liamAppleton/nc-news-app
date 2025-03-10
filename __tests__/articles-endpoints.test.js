@@ -26,4 +26,13 @@ describe('GET /api/articles/:article_id', () => {
         });
       });
   });
+  test('400: Reponds with "bad request" when given an invalid article id', () => {
+    return request(app)
+      .get('/api/articles/banana')
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.status).toBe(400);
+        expect(body.msg).toBe('bad request');
+      });
+  });
 });

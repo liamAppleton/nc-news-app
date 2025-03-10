@@ -115,5 +115,14 @@ describe('GET /api/articles/:article_id/comments', () => {
           expect(body.msg).toBe('bad request');
         });
     });
+    test('404: Responds with "article not found" when passed a valid id that does not exist', () => {
+      return request(app)
+        .get('/api/articles/9999/comments')
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.status).toBe(404);
+          expect(body.msg).toBe('article not found');
+        });
+    });
   });
 });

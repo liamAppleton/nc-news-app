@@ -23,9 +23,13 @@ const getArticles = (req, res, next) => {
 
 const getCommentsByArticleId = (req, res, next) => {
   const { article_id } = req.params;
-  fetchCommentsByArticleId(article_id).then((comments) => {
-    res.status(200).send({ comments, comments });
-  });
+  fetchCommentsByArticleId(article_id)
+    .then((comments) => {
+      res.status(200).send({ comments, comments });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
 
 module.exports = { getArticleById, getArticles, getCommentsByArticleId };

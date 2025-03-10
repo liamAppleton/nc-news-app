@@ -104,4 +104,16 @@ describe('GET /api/articles/:article_id/comments', () => {
         expect(comments).toBeSortedBy('created_at', { descending: true });
       });
   });
+
+  describe('error handling', () => {
+    test('400: Responds with "bad request" when passed an invalid article id', () => {
+      return request(app)
+        .get('/api/articles/banana/comments')
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.status).toBe(400);
+          expect(body.msg).toBe('bad request');
+        });
+    });
+  });
 });

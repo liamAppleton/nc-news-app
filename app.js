@@ -1,15 +1,12 @@
 const express = require('express');
 const app = express();
-const endpoints = require('./endpoints.json');
-const { getTopics } = require('./controllers');
+const { getEndpoints, getTopics } = require('./controllers');
 const {
   handlePsqlError,
   handleServerError,
 } = require('./error-handlers/error-handlers.controllers');
 
-app.get('/api', (req, res) => {
-  res.status(200).send({ endpoints: endpoints });
-});
+app.get('/api', getEndpoints);
 
 app.get('/api/topics', getTopics);
 

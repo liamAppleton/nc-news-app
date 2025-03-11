@@ -241,9 +241,15 @@ describe('PATCH /api/articles/:article_id', () => {
           expect(body.msg).toBe('resource not found');
         });
     });
+    test('400: Reponds with "bad request" when passed an invalid value for inc_votes', () => {
+      return request(app)
+        .patch('/api/articles/3')
+        .send({ inc_votes: 'banana' })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.status).toBe(400);
+          expect(body.msg).toBe('bad request');
+        });
+    });
   });
 });
-
-// 400 article id
-// 404 article id
-// 400 votes

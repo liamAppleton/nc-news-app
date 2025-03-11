@@ -53,7 +53,7 @@ const addCommentByArticleId = ({ username, body, article_id }) => {
   );
   promises.push(db.query(queryString));
 
-  return Promise.all(promises).then(([checkArticlePromise, { rows }]) => {
+  return Promise.all(promises).then(([_, { rows }]) => {
     return rows[0];
   });
 };

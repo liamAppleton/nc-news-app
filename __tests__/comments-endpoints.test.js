@@ -13,13 +13,22 @@ describe('DELETE /api/comments/:comment_id', () => {
   });
 
   describe('error handling', () => {
-    test('400: Responds withh "bad request" when passed an invalid comment id', () => {
+    test('400: Responds with "bad request" when passed an invalid comment id', () => {
       return request(app)
         .delete('/api/comments/banana')
         .expect(400)
         .then(({ body }) => {
           expect(body.status).toBe(400);
           expect(body.msg).toBe('bad request');
+        });
+    });
+    test('404: Responds with "resource not found" when passed a valid comment id that does not exist', () => {
+      return request(app)
+        .delete('/api/comments/99999')
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.status).toBe(404);
+          expect(body.msg).toBe('resource not found');
         });
     });
   });

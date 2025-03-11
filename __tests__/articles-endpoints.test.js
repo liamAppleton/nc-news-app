@@ -199,3 +199,24 @@ describe('POST /api/articles/:article_id/comments', () => {
     });
   });
 });
+
+describe('PATCH /api/articles/:article_id', () => {
+  test('200: Reponds with the updated article object', () => {
+    return request(app)
+      .patch('/api/articles/3')
+      .send({ inc_votes: 2 })
+      .expect(200)
+      .then(({ body: { article } }) => {
+        expect(article).toEqual(
+          expect.objectContaining({
+            article_id: 3,
+            title: expect.any(String),
+            topic: expect.any(String),
+            created_at: expect.any(String),
+            votes: 2,
+            article_img_url: expect.any(String),
+          })
+        );
+      });
+  });
+});

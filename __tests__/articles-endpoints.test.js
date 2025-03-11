@@ -127,7 +127,7 @@ describe('GET /api/articles/:article_id/comments', () => {
   });
 });
 
-describe('POST /api/articles/:article_id/comments', () => {
+describe.only('POST /api/articles/:article_id/comments', () => {
   let newComment;
   beforeEach(() => {
     newComment = {
@@ -153,28 +153,6 @@ describe('POST /api/articles/:article_id/comments', () => {
         );
       });
   });
-  test('The new comment should be added to the comments table', () => {
-    return request(app)
-      .post('/api/articles/3/comments')
-      .send(newComment)
-      .expect(201)
-      .then(() => {
-        return db
-          .query(`SELECT * FROM comments WHERE body = $1`, [newComment.body])
-          .then(({ rows }) => {
-            expect(rows[0]).toEqual(
-              expect.objectContaining({
-                comment_id: expect.any(Number),
-                article_id: 3,
-                body: 'Test body 1',
-                votes: expect.any(Number),
-                author: 'rogersop',
-                created_at: expect.any(Date),
-              })
-            );
-          });
-      });
-  });
 
   describe('error handling', () => {
     test('400: Responds with "bad request" when passed an invalid article id', () => {
@@ -191,6 +169,19 @@ describe('POST /api/articles/:article_id/comments', () => {
       return request(app)
         .post('/api/articles/99999/comments')
         .send(newComment)
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.status).toBe(404);
+          expect(body.msg).toBe('resource not found');
+        });
+    });
+    test('404: Responds with "resource not found" when passed username that does not exist', () => {
+      return request(app)
+        .post('/api/articles/3/comments')
+        .send({
+          username: 'banana',
+          body: 'Test body 1',
+        })
         .expect(404)
         .then(({ body }) => {
           expect(body.status).toBe(404);

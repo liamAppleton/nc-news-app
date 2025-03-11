@@ -44,6 +44,7 @@ const fetchCommentsByArticleId = (articleId) => {
 
 const addCommentByArticleId = ({ username, body, article_id }) => {
   const promises = [checkExists('articles', 'article_id', article_id)];
+  promises.push(checkExists('users', 'username', username));
 
   const queryString = format(
     `INSERT INTO comments
@@ -54,9 +55,11 @@ const addCommentByArticleId = ({ username, body, article_id }) => {
 
   promises.push(db.query(queryString));
 
-  return Promise.all(promises).then(([_, { rows }]) => {
-    return rows[0];
-  });
+  return Promise.all(promises).then(
+    ([checkArticlePromise, checkUserPromise, { rows }]) => {
+      return rows[0];
+    }
+  );
 };
 
 const updateArticleById = ({ inc_votes, article_id }) => {

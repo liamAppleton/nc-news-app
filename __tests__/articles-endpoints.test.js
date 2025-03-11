@@ -122,7 +122,7 @@ describe('GET /api/articles/:article_id/comments', () => {
         .then(({ body }) => {
           expect(body.status).toBe(404);
           expect(body.msg).toBe('article not found');
-        });
+        }); //! resource not found, to match checkExists function
     });
   });
 });
@@ -178,7 +178,7 @@ describe('POST /api/articles/:article_id/comments', () => {
   });
 
   describe('error handling', () => {
-    test('400: responds with "bad request" when passed an invalid article id', () => {
+    test('400: Responds with "bad request" when passed an invalid article id', () => {
       const newComment = {
         username: 'rogersop',
         body: 'Test body 1',
@@ -190,6 +190,20 @@ describe('POST /api/articles/:article_id/comments', () => {
         .then(({ body }) => {
           expect(body.status).toBe(400);
           expect(body.msg).toBe('bad request');
+        });
+    });
+    test('404: Responds with "resource not found" when passed a valid article id that does not exist', () => {
+      const newComment = {
+        username: 'rogersop',
+        body: 'Test body 1',
+      };
+      return request(app)
+        .post('/api/articles/99999/comments')
+        .send(newComment)
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.status).toBe(404);
+          expect(body.msg).toBe('resource not found');
         });
     });
   });

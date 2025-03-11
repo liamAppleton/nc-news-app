@@ -45,13 +45,18 @@ const fetchCommentsByArticleId = (articleId) => {
 };
 
 const addCommentByArticleId = ({ username, body, article_id }) => {
+  const promises = [checkExists('articles', 'article_id', article_id)];
+
   const queryString = format(
     `INSERT INTO comments
   (author, body, article_id, created_at)
   VALUES %L RETURNING *`,
     [[username, body, article_id, new Date()]]
   );
-  return db.query(queryString).then(({ rows }) => {
+
+  promises.push(db.query(queryString));
+
+  return Promise.all(promises).then(([_, { rows }]) => {
     return rows[0];
   });
 };

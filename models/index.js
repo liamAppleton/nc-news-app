@@ -7,6 +7,8 @@ const {
   updateArticleById,
 } = require('./articles.models');
 const { removeComment } = require('./comments.models');
+const { fetchUsers } = require('./users.models');
+
 module.exports = {
   fetchTopics,
   fetchArticleById,
@@ -15,4 +17,5 @@ module.exports = {
   addCommentByArticleId,
   updateArticleById,
   removeComment,
+  fetchUsers,
 };

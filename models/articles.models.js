@@ -14,6 +14,8 @@ const fetchArticleById = (articleId) => {
 };
 
 const fetchArticles = (query) => {
+  const promises = [];
+
   let queryString = `SELECT articles.article_id, articles.title, articles.topic, articles.created_at,
        articles.votes, articles.article_img_url, COUNT(comments.comment_id) AS comment_count 
        FROM articles LEFT JOIN comments 
@@ -24,6 +26,7 @@ const fetchArticles = (query) => {
   const queryParams = [];
 
   if (query.topic) {
+    promises.push(checkExists('articles', 'topic', query.topic));
     queryString += `WHERE articles.topic = $1 `;
     queryParams.push(query.topic);
   }
@@ -38,7 +41,8 @@ const fetchArticles = (query) => {
   }
 
   const formattedString = format(queryString, queryFormatParams[0]);
-  return db.query(formattedString, queryParams).then(({ rows }) => {
+  promises.unshift(db.query(formattedString, queryParams));
+  return Promise.all(promises).then(([{ rows }]) => {
     return rows;
   });
 };

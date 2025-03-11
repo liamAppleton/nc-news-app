@@ -176,4 +176,21 @@ describe('POST /api/articles/:article_id/comments', () => {
           });
       });
   });
+
+  describe('error handling', () => {
+    test('400: responds with "bad request" when passed an invalid article id', () => {
+      const newComment = {
+        username: 'rogersop',
+        body: 'Test body 1',
+      };
+      return request(app)
+        .post('/api/articles/banana/comments')
+        .send(newComment)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.status).toBe(400);
+          expect(body.msg).toBe('bad request');
+        });
+    });
+  });
 });

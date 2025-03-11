@@ -33,12 +33,16 @@ const getCommentsByArticleId = (req, res, next) => {
     });
 };
 
-const postCommentByArticleId = (req, res, err) => {
+const postCommentByArticleId = (req, res, next) => {
   const { username, body } = req.body;
   const { article_id } = req.params;
-  addCommentByArticleId({ username, body, article_id }).then((comment) => {
-    res.status(201).send({ comment });
-  });
+  addCommentByArticleId({ username, body, article_id })
+    .then((comment) => {
+      res.status(201).send({ comment });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
 
 module.exports = {

@@ -81,7 +81,7 @@ describe('GET /api/articles/:article_id/comments', () => {
       .get('/api/articles/3/comments')
       .expect(200)
       .then(({ body: { comments } }) => {
-        expect(comments.length).not.toBe(0);
+        expect(comments.length).toBe(2);
         comments.forEach((comment) => {
           expect(comment).toEqual(
             expect.objectContaining({
@@ -115,24 +115,27 @@ describe('GET /api/articles/:article_id/comments', () => {
           expect(body.msg).toBe('bad request');
         });
     });
-    test('404: Responds with "article not found" when passed a valid id that does not exist', () => {
+    test('404: Responds with "resource not found" when passed a valid id that does not exist', () => {
       return request(app)
         .get('/api/articles/9999/comments')
         .expect(404)
         .then(({ body }) => {
           expect(body.status).toBe(404);
-          expect(body.msg).toBe('article not found');
-        }); //! resource not found, to match checkExists function
+          expect(body.msg).toBe('resource not found');
+        });
     });
   });
 });
 
 describe('POST /api/articles/:article_id/comments', () => {
-  test('201: Responds with the posted comment', () => {
-    const newComment = {
+  let newComment;
+  beforeEach(() => {
+    newComment = {
       username: 'rogersop',
       body: 'Test body 1',
     };
+  });
+  test('201: Responds with the posted comment', () => {
     return request(app)
       .post('/api/articles/3/comments')
       .send(newComment)
@@ -151,10 +154,6 @@ describe('POST /api/articles/:article_id/comments', () => {
       });
   });
   test('The new comment should be added to the comments table', () => {
-    const newComment = {
-      username: 'rogersop',
-      body: 'Test body 1',
-    };
     return request(app)
       .post('/api/articles/3/comments')
       .send(newComment)
@@ -179,10 +178,6 @@ describe('POST /api/articles/:article_id/comments', () => {
 
   describe('error handling', () => {
     test('400: Responds with "bad request" when passed an invalid article id', () => {
-      const newComment = {
-        username: 'rogersop',
-        body: 'Test body 1',
-      };
       return request(app)
         .post('/api/articles/banana/comments')
         .send(newComment)
@@ -193,10 +188,6 @@ describe('POST /api/articles/:article_id/comments', () => {
         });
     });
     test('404: Responds with "resource not found" when passed a valid article id that does not exist', () => {
-      const newComment = {
-        username: 'rogersop',
-        body: 'Test body 1',
-      };
       return request(app)
         .post('/api/articles/99999/comments')
         .send(newComment)

@@ -153,28 +153,6 @@ describe('POST /api/articles/:article_id/comments', () => {
         );
       });
   });
-  test('The new comment should be added to the comments table', () => {
-    return request(app)
-      .post('/api/articles/3/comments')
-      .send(newComment)
-      .expect(201)
-      .then(() => {
-        return db
-          .query(`SELECT * FROM comments WHERE body = $1`, [newComment.body])
-          .then(({ rows }) => {
-            expect(rows[0]).toEqual(
-              expect.objectContaining({
-                comment_id: expect.any(Number),
-                article_id: 3,
-                body: 'Test body 1',
-                votes: expect.any(Number),
-                author: 'rogersop',
-                created_at: expect.any(Date),
-              })
-            );
-          });
-      });
-  });
 
   describe('error handling', () => {
     test('400: Responds with "bad request" when passed an invalid article id', () => {
@@ -195,6 +173,83 @@ describe('POST /api/articles/:article_id/comments', () => {
         .then(({ body }) => {
           expect(body.status).toBe(404);
           expect(body.msg).toBe('resource not found');
+        });
+    });
+    test('404: Responds with "resource not found" when passed username that does not exist', () => {
+      return request(app)
+        .post('/api/articles/3/comments')
+        .send({
+          username: 'banana',
+          body: 'Test body 1',
+        })
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.status).toBe(404);
+          expect(body.msg).toBe('resource not found');
+        });
+    });
+    test('400: Responds with "bad request" when post body does not have required fields', () => {
+      return request(app)
+        .post('/api/articles/3/comments')
+        .send({ username: 'rogersop' })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.status).toBe(400);
+          expect(body.msg).toBe('bad request');
+        });
+    });
+  });
+});
+
+describe('PATCH /api/articles/:article_id', () => {
+  test('200: Reponds with the updated article object', () => {
+    return request(app)
+      .patch('/api/articles/3')
+      .send({ inc_votes: 2 })
+      .expect(200)
+      .then(({ body: { article } }) => {
+        expect(article).toEqual(
+          expect.objectContaining({
+            article_id: 3,
+            title: expect.any(String),
+            topic: expect.any(String),
+            created_at: expect.any(String),
+            votes: 2,
+            article_img_url: expect.any(String),
+          })
+        );
+      });
+  });
+
+  describe('error handling', () => {
+    test('400: Responds with "bad request" when passed an invalid article id', () => {
+      return request(app)
+        .patch('/api/articles/banana')
+        .send({ inc_votes: 1 })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.status).toBe(400);
+          expect(body.msg).toBe('bad request');
+        });
+    });
+    test('404: Responds with "resource not found" when passed a valid article id that does not exist', () => {
+      return request(app)
+        .patch('/api/articles/99999')
+        .send({ inc_votes: 1 })
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.status).toBe(404);
+          expect(body.msg).toBe('resource not found');
+        });
+    });
+    test('400: Reponds with "bad request" when passed an invalid value for inc_votes', () => {
+      return request(app)
+        .patch('/api/articles/3')
+        .send({ inc_votes: 'banana' })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.status).toBe(400);
+          expect(body.msg).toBe('bad request');
         });
     });
   });

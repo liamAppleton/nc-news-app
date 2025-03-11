@@ -4,6 +4,7 @@ const {
   fetchArticles,
   fetchCommentsByArticleId,
   addCommentByArticleId,
+  updateArticleById,
 } = require('./articles.models');
 
 module.exports = {
@@ -12,4 +13,5 @@ module.exports = {
   fetchArticles,
   fetchCommentsByArticleId,
   addCommentByArticleId,
+  updateArticleById,
 };

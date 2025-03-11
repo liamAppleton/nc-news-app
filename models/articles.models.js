@@ -43,7 +43,12 @@ const fetchCommentsByArticleId = (articleId) => {
 };
 
 const addCommentByArticleId = ({ username, body, article_id }) => {
+  if (!body) {
+    return Promise.reject({ status: 400, msg: 'bad request' });
+  }
+
   const promises = [checkExists('articles', 'article_id', article_id)];
+  promises.push(checkExists('users', 'username', username));
 
   const queryString = format(
     `INSERT INTO comments
@@ -51,8 +56,24 @@ const addCommentByArticleId = ({ username, body, article_id }) => {
   VALUES %L RETURNING *`,
     [[username, body, article_id, new Date()]]
   );
-
   promises.push(db.query(queryString));
+
+  return Promise.all(promises).then(
+    ([checkArticlePromise, checkUserPromise, { rows }]) => {
+      return rows[0];
+    }
+  );
+};
+
+const updateArticleById = ({ inc_votes, article_id }) => {
+  const promises = [checkExists('articles', 'article_id', article_id)];
+
+  const queryString = `UPDATE articles
+    SET votes = votes + $1
+    WHERE article_id = $2
+    RETURNING *`;
+
+  promises.push(db.query(queryString, [inc_votes, article_id]));
 
   return Promise.all(promises).then(([_, { rows }]) => {
     return rows[0];
@@ -64,4 +85,5 @@ module.exports = {
   fetchArticles,
   fetchCommentsByArticleId,
   addCommentByArticleId,
+  updateArticleById,
 };

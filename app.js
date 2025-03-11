@@ -8,6 +8,7 @@ const {
   getCommentsByArticleId,
   postCommentByArticleId,
   patchArticleById,
+  deleteComment,
 } = require('./controllers');
 const {
   handleNotARouteError,
@@ -31,6 +32,8 @@ app.get('/api/articles/:article_id/comments', getCommentsByArticleId);
 app.post('/api/articles/:article_id/comments', postCommentByArticleId);
 
 app.patch('/api/articles/:article_id', patchArticleById);
+
+app.delete('/api/comments/:comment_id', deleteComment);
 
 app.all('*', handleNotARouteError);
 

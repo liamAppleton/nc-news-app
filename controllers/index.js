@@ -7,6 +7,7 @@ const {
   postCommentByArticleId,
   patchArticleById,
 } = require('./articles.controllers');
+const { deleteComment } = require('./comments.controllers');
 
 module.exports = {
   getEndpoints,
@@ -16,4 +17,5 @@ module.exports = {
   getCommentsByArticleId,
   postCommentByArticleId,
   patchArticleById,
+  deleteComment,
 };

@@ -9,6 +9,7 @@ const {
   postCommentByArticleId,
   patchArticleById,
   deleteComment,
+  getUsers,
 } = require('./controllers');
 const {
   handleNotARouteError,
@@ -34,6 +35,8 @@ app.post('/api/articles/:article_id/comments', postCommentByArticleId);
 app.patch('/api/articles/:article_id', patchArticleById);
 
 app.delete('/api/comments/:comment_id', deleteComment);
+
+app.get('/api/users', getUsers);
 
 app.all('*', handleNotARouteError);
 

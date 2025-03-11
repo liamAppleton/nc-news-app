@@ -219,4 +219,21 @@ describe('PATCH /api/articles/:article_id', () => {
         );
       });
   });
+
+  describe('error handling', () => {
+    test('400: Responds with "bad request" when passed an invalid article id', () => {
+      return request(app)
+        .patch('/api/articles/banana')
+        .send({ inc_votes: 1 })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.status).toBe(400);
+          expect(body.msg).toBe('bad request');
+        });
+    });
+  });
 });
+
+// 400 article id
+// 404 article id
+// 400 votes

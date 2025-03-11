@@ -43,6 +43,10 @@ const fetchCommentsByArticleId = (articleId) => {
 };
 
 const addCommentByArticleId = ({ username, body, article_id }) => {
+  if (!body) {
+    return Promise.reject({ status: 400, msg: 'bad request' });
+  }
+
   const promises = [checkExists('articles', 'article_id', article_id)];
   promises.push(checkExists('users', 'username', username));
 
@@ -52,7 +56,6 @@ const addCommentByArticleId = ({ username, body, article_id }) => {
   VALUES %L RETURNING *`,
     [[username, body, article_id, new Date()]]
   );
-
   promises.push(db.query(queryString));
 
   return Promise.all(promises).then(

@@ -127,7 +127,7 @@ describe('GET /api/articles/:article_id/comments', () => {
   });
 });
 
-describe.only('POST /api/articles/:article_id/comments', () => {
+describe('POST /api/articles/:article_id/comments', () => {
   let newComment;
   beforeEach(() => {
     newComment = {
@@ -186,6 +186,16 @@ describe.only('POST /api/articles/:article_id/comments', () => {
         .then(({ body }) => {
           expect(body.status).toBe(404);
           expect(body.msg).toBe('resource not found');
+        });
+    });
+    test('400: Responds with "bad request" when post body does not have required fields', () => {
+      return request(app)
+        .post('/api/articles/3/comments')
+        .send({ username: 'rogersop' })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.status).toBe(400);
+          expect(body.msg).toBe('bad request');
         });
     });
   });

@@ -1,4 +1,6 @@
 const db = require('../db/connection.js');
+const format = require('pg-format');
+const { checkExists } = require('../db/seeds/utils.js');
 
 const fetchArticleById = (articleId) => {
   return db
@@ -27,19 +29,39 @@ const fetchArticles = () => {
 };
 
 const fetchCommentsByArticleId = (articleId) => {
-  return db
-    .query(
-      `SELECT comment_id, article_id, body, votes, author, created_at
+  const promises = [checkExists('articles', 'article_id', articleId)];
+
+  const queryString = `SELECT comment_id, article_id, body, votes, author, created_at
     FROM comments WHERE article_id = $1
-    ORDER BY created_at DESC`,
-      [articleId]
-    )
-    .then(({ rows }) => {
-      if (rows.length === 0) {
-        return Promise.reject({ status: 404, msg: 'article not found' });
-      }
-      return rows;
-    });
+    ORDER BY created_at DESC`;
+
+  promises.push(db.query(queryString, [articleId]));
+
+  return Promise.all(promises).then(([_, { rows }]) => {
+    return rows;
+  });
 };
 
-module.exports = { fetchArticleById, fetchArticles, fetchCommentsByArticleId };
+const addCommentByArticleId = ({ username, body, article_id }) => {
+  const promises = [checkExists('articles', 'article_id', article_id)];
+
+  const queryString = format(
+    `INSERT INTO comments
+  (author, body, article_id, created_at)
+  VALUES %L RETURNING *`,
+    [[username, body, article_id, new Date()]]
+  );
+
+  promises.push(db.query(queryString));
+
+  return Promise.all(promises).then(([_, { rows }]) => {
+    return rows[0];
+  });
+};
+
+module.exports = {
+  fetchArticleById,
+  fetchArticles,
+  fetchCommentsByArticleId,
+  addCommentByArticleId,
+};

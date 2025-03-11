@@ -81,7 +81,7 @@ describe('GET /api/articles/:article_id/comments', () => {
       .get('/api/articles/3/comments')
       .expect(200)
       .then(({ body: { comments } }) => {
-        expect(comments.length).not.toBe(0);
+        expect(comments.length).toBe(2);
         comments.forEach((comment) => {
           expect(comment).toEqual(
             expect.objectContaining({
@@ -115,13 +115,86 @@ describe('GET /api/articles/:article_id/comments', () => {
           expect(body.msg).toBe('bad request');
         });
     });
-    test('404: Responds with "article not found" when passed a valid id that does not exist', () => {
+    test('404: Responds with "resource not found" when passed a valid id that does not exist', () => {
       return request(app)
         .get('/api/articles/9999/comments')
         .expect(404)
         .then(({ body }) => {
           expect(body.status).toBe(404);
-          expect(body.msg).toBe('article not found');
+          expect(body.msg).toBe('resource not found');
+        });
+    });
+  });
+});
+
+describe('POST /api/articles/:article_id/comments', () => {
+  let newComment;
+  beforeEach(() => {
+    newComment = {
+      username: 'rogersop',
+      body: 'Test body 1',
+    };
+  });
+  test('201: Responds with the posted comment', () => {
+    return request(app)
+      .post('/api/articles/3/comments')
+      .send(newComment)
+      .expect(201)
+      .then(({ body: { comment } }) => {
+        expect(comment).toEqual(
+          expect.objectContaining({
+            comment_id: expect.any(Number),
+            article_id: 3,
+            body: 'Test body 1',
+            votes: expect.any(Number),
+            author: 'rogersop',
+            created_at: expect.any(String),
+          })
+        );
+      });
+  });
+  test('The new comment should be added to the comments table', () => {
+    return request(app)
+      .post('/api/articles/3/comments')
+      .send(newComment)
+      .expect(201)
+      .then(() => {
+        return db
+          .query(`SELECT * FROM comments WHERE body = $1`, [newComment.body])
+          .then(({ rows }) => {
+            expect(rows[0]).toEqual(
+              expect.objectContaining({
+                comment_id: expect.any(Number),
+                article_id: 3,
+                body: 'Test body 1',
+                votes: expect.any(Number),
+                author: 'rogersop',
+                created_at: expect.any(Date),
+              })
+            );
+          });
+      });
+  });
+
+  describe('error handling', () => {
+    test('400: Responds with "bad request" when passed an invalid article id', () => {
+      return request(app)
+        .post('/api/articles/banana/comments')
+        .send(newComment)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.status).toBe(400);
+          expect(body.msg).toBe('bad request');
+        });
+    });
+    test('404: Responds with "resource not found" when passed a valid article id that does not exist', () => {
+      return request(app)
+        .post('/api/articles/99999/comments')
+        .send(newComment)
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.status).toBe(404);
+          expect(body.msg).toBe('resource not found');
         });
     });
   });

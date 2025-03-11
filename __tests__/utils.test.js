@@ -2,7 +2,13 @@ const {
   convertTimestampToDate,
   createLookUp,
   formatDataWithId,
+  checkExists,
 } = require('../db/seeds/utils');
+const db = require('../db/connection.js');
+
+afterAll(() => {
+  db.end();
+});
 
 describe('convertTimestampToDate', () => {
   test('returns a new object', () => {
@@ -370,6 +376,20 @@ describe('formatDataWithId', () => {
       ];
 
       expect(formatDataWithId(input, lookUp)).not.toBe(input);
+    });
+  });
+});
+
+describe('checkExists', () => {
+  test('should resolve with true if resource exists', () => {
+    return checkExists('topics', 'slug', 'mitch').then((res) => {
+      expect(res).toBe(true);
+    });
+  });
+  test('should reject with error object if resource does not exist', () => {
+    return checkExists('topics', 'slug', 'banana').catch((err) => {
+      expect(err.status).toBe(404);
+      expect(err.msg).toBe('resource not found');
     });
   });
 });

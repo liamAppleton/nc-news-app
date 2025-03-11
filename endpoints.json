@@ -48,5 +48,16 @@
       "author": "icellusedkars",
       "created_at": "2020-02-23T12:01:00.000Z"
     }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "adds a comment to database and responds with added comment",
+    "exampleResponse": {
+      "comment_id": 11,
+      "article_id": 3,
+      "body": "Ambidextrous marsupial",
+      "votes": 0,
+      "author": "icellusedkars",
+      "created_at": "2020-09-19T23:10:00.000Z"
+    }
   }
 }

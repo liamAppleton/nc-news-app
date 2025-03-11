@@ -150,4 +150,30 @@ describe('POST /api/articles/:article_id/comments', () => {
         );
       });
   });
+  test('The new comment should be added to the comments table', () => {
+    const newComment = {
+      username: 'rogersop',
+      body: 'Test body 1',
+    };
+    return request(app)
+      .post('/api/articles/3/comments')
+      .send(newComment)
+      .expect(201)
+      .then(() => {
+        return db
+          .query(`SELECT * FROM comments WHERE body = $1`, [newComment.body])
+          .then(({ rows }) => {
+            expect(rows[0]).toEqual(
+              expect.objectContaining({
+                comment_id: expect.any(Number),
+                article_id: 3,
+                body: 'Test body 1',
+                votes: expect.any(Number),
+                author: 'rogersop',
+                created_at: expect.any(Date),
+              })
+            );
+          });
+      });
+  });
 });

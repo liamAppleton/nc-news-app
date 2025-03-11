@@ -13,19 +13,27 @@ const fetchArticleById = (articleId) => {
     });
 };
 
-const fetchArticles = () => {
-  return db
-    .query(
-      `SELECT articles.article_id, articles.title, articles.topic, articles.created_at,
+const fetchArticles = (query) => {
+  let queryString = `SELECT articles.article_id, articles.title, articles.topic, articles.created_at,
        articles.votes, articles.article_img_url, COUNT(comments.comment_id) AS comment_count 
        FROM articles LEFT JOIN comments 
        ON articles.article_id = comments.article_id 
-       GROUP BY articles.article_id, articles.title, articles.topic, articles.created_at, articles.votes, articles.article_img_url 
-       ORDER BY articles.created_at DESC`
-    )
-    .then(({ rows }) => {
-      return rows;
-    });
+       GROUP BY articles.article_id, articles.title, articles.topic, articles.created_at, articles.votes, articles.article_img_url `;
+  const queryParams = [];
+
+  if (query['sort_by']) {
+    queryString += `ORDER BY %I `;
+    queryParams.push(query['sort_by']);
+  } else if (query.order === 'asc') {
+    queryString += `ORDER BY articles.created_at ASC`;
+  } else {
+    queryString += 'ORDER BY articles.created_at DESC';
+  }
+
+  const formattedString = format(queryString, queryParams[0]);
+  return db.query(formattedString).then(({ rows }) => {
+    return rows;
+  });
 };
 
 const fetchCommentsByArticleId = (articleId) => {
@@ -43,12 +51,7 @@ const fetchCommentsByArticleId = (articleId) => {
 };
 
 const addCommentByArticleId = ({ username, body, article_id }) => {
-  if (!body) {
-    return Promise.reject({ status: 400, msg: 'bad request' });
-  }
-
   const promises = [checkExists('articles', 'article_id', article_id)];
-  promises.push(checkExists('users', 'username', username));
 
   const queryString = format(
     `INSERT INTO comments
@@ -58,26 +61,26 @@ const addCommentByArticleId = ({ username, body, article_id }) => {
   );
   promises.push(db.query(queryString));
 
-  return Promise.all(promises).then(
-    ([checkArticlePromise, checkUserPromise, { rows }]) => {
-      return rows[0];
-    }
-  );
-};
-
-const updateArticleById = ({ inc_votes, article_id }) => {
-  const promises = [checkExists('articles', 'article_id', article_id)];
-
-  const queryString = `UPDATE articles
-    SET votes = votes + $1
-    WHERE article_id = $2
-    RETURNING *`;
-
-  promises.push(db.query(queryString, [inc_votes, article_id]));
-
   return Promise.all(promises).then(([_, { rows }]) => {
     return rows[0];
   });
+};
+
+const updateArticleById = ({ inc_votes, article_id }) => {
+  return db
+    .query(
+      `UPDATE articles
+    SET votes = votes + $1
+    WHERE article_id = $2
+    RETURNING *`,
+      [inc_votes, article_id]
+    )
+    .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({ status: 404, msg: 'article not found' });
+      }
+      return rows[0];
+    });
 };
 
 module.exports = {

@@ -73,6 +73,45 @@ describe('GET /api/articles', () => {
         });
       });
   });
+
+  describe('queries', () => {
+    test('200: Responds with an array of article objects sorted by the passed column', () => {
+      return request(app)
+        .get('/api/articles?sort_by=title')
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toBeSortedBy('title');
+        });
+    });
+    test('200: Responds with an array of article objects sorted in ascending order', () => {
+      return request(app)
+        .get('/api/articles?order=asc')
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toBeSortedBy('created_at', { descending: false });
+        });
+    });
+    test('200: Articles should be sorted in descending order by default', () => {
+      return request(app)
+        .get('/api/articles?order')
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toBeSortedBy('created_at', { descending: true });
+        });
+    });
+
+    describe('error handling: queries', () => {
+      test('400: Responds with "bad request" when passed an invalid column name for sort_by query', () => {
+        return request(app)
+          .get('/api/articles?sort_by=banana')
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.status).toBe(400);
+            expect(body.msg).toBe('bad request');
+          });
+      });
+    });
+  });
 });
 
 describe('GET /api/articles/:article_id/comments', () => {
@@ -175,17 +214,17 @@ describe('POST /api/articles/:article_id/comments', () => {
           expect(body.msg).toBe('resource not found');
         });
     });
-    test('404: Responds with "resource not found" when passed username that does not exist', () => {
+    test('400: Responds with "bad request" when passed username that does not exist', () => {
       return request(app)
         .post('/api/articles/3/comments')
         .send({
           username: 'banana',
           body: 'Test body 1',
         })
-        .expect(404)
+        .expect(400)
         .then(({ body }) => {
-          expect(body.status).toBe(404);
-          expect(body.msg).toBe('resource not found');
+          expect(body.status).toBe(400);
+          expect(body.msg).toBe('bad request');
         });
     });
     test('400: Responds with "bad request" when post body does not have required fields', () => {
@@ -232,14 +271,14 @@ describe('PATCH /api/articles/:article_id', () => {
           expect(body.msg).toBe('bad request');
         });
     });
-    test('404: Responds with "resource not found" when passed a valid article id that does not exist', () => {
+    test('404: Responds with "article not found" when passed a valid article id that does not exist', () => {
       return request(app)
         .patch('/api/articles/99999')
         .send({ inc_votes: 1 })
         .expect(404)
         .then(({ body }) => {
           expect(body.status).toBe(404);
-          expect(body.msg).toBe('resource not found');
+          expect(body.msg).toBe('article not found');
         });
     });
     test('400: Reponds with "bad request" when passed an invalid value for inc_votes', () => {

@@ -3,7 +3,7 @@ const handleNotARouteError = (req, res, next) => {
 };
 
 const handlePsqlError = (err, req, res, next) => {
-  if (err.code === '42703' || err.code == '22P02') {
+  if (err.code) {
     res.status(400).send({ status: 400, msg: 'bad request' });
   } else next(err);
 };

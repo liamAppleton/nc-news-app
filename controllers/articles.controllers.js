@@ -18,9 +18,14 @@ const getArticleById = (req, res, next) => {
 };
 
 const getArticles = (req, res, next) => {
-  fetchArticles().then((articles) => {
-    res.status(200).send({ articles });
-  });
+  const { query } = req;
+  fetchArticles(query)
+    .then((articles) => {
+      res.status(200).send({ articles });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
 
 const getCommentsByArticleId = (req, res, next) => {

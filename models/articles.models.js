@@ -22,8 +22,10 @@ const fetchArticles = (query) => {
   const queryParams = [];
 
   if (query['sort_by']) {
-    queryString += `ORDER BY %I`;
+    queryString += `ORDER BY %I `;
     queryParams.push(query['sort_by']);
+  } else if (query.order === 'asc') {
+    queryString += `ORDER BY articles.created_at ASC`;
   } else {
     queryString += 'ORDER BY articles.created_at DESC';
   }

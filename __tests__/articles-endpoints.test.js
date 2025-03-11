@@ -74,13 +74,29 @@ describe('GET /api/articles', () => {
       });
   });
 
-  describe('queries', () => {
+  describe.only('queries', () => {
     test('200: Responds with an array of article objects sorted by the passed column', () => {
       return request(app)
         .get('/api/articles?sort_by=title')
         .expect(200)
         .then(({ body: { articles } }) => {
           expect(articles).toBeSortedBy('title');
+        });
+    });
+    test('200: Responds with an array of article objects sorted in ascending order', () => {
+      return request(app)
+        .get('/api/articles?order=asc')
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toBeSortedBy('created_at', { descending: false });
+        });
+    });
+    test('200: Articles should be sorted in descending order by default', () => {
+      return request(app)
+        .get('/api/articles?order')
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toBeSortedBy('created_at', { descending: true });
         });
     });
   });

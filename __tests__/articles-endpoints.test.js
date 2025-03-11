@@ -73,6 +73,17 @@ describe('GET /api/articles', () => {
         });
       });
   });
+
+  describe('queries', () => {
+    test('200: Responds with an array of article objects sorted by the passed column', () => {
+      return request(app)
+        .get('/api/articles?sort_by=title')
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toBeSortedBy('title');
+        });
+    });
+  });
 });
 
 describe('GET /api/articles/:article_id/comments', () => {

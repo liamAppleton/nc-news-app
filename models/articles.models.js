@@ -13,19 +13,25 @@ const fetchArticleById = (articleId) => {
     });
 };
 
-const fetchArticles = () => {
-  return db
-    .query(
-      `SELECT articles.article_id, articles.title, articles.topic, articles.created_at,
+const fetchArticles = (query) => {
+  let queryString = `SELECT articles.article_id, articles.title, articles.topic, articles.created_at,
        articles.votes, articles.article_img_url, COUNT(comments.comment_id) AS comment_count 
        FROM articles LEFT JOIN comments 
        ON articles.article_id = comments.article_id 
-       GROUP BY articles.article_id, articles.title, articles.topic, articles.created_at, articles.votes, articles.article_img_url 
-       ORDER BY articles.created_at DESC`
-    )
-    .then(({ rows }) => {
-      return rows;
-    });
+       GROUP BY articles.article_id, articles.title, articles.topic, articles.created_at, articles.votes, articles.article_img_url `;
+  const queryParams = [];
+
+  if (query['sort_by']) {
+    queryString += `ORDER BY %I`;
+    queryParams.push(query['sort_by']);
+  } else {
+    queryString += 'ORDER BY articles.created_at DESC';
+  }
+
+  const formattedString = format(queryString, queryParams[0]);
+  return db.query(formattedString).then(({ rows }) => {
+    return rows;
+  });
 };
 
 const fetchCommentsByArticleId = (articleId) => {

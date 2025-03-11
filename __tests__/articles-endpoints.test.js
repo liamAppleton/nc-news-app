@@ -99,6 +99,16 @@ describe('GET /api/articles', () => {
           expect(articles).toBeSortedBy('created_at', { descending: true });
         });
     });
+    test('200: Responds with an array of article objected filtered by the passed topic', () => {
+      return request(app)
+        .get('/api/articles?topic=mitch')
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          articles.forEach((article) => {
+            expect(article.topic).toBe('mitch');
+          });
+        });
+    });
 
     describe('error handling: queries', () => {
       test('400: Responds with "bad request" when passed an invalid column name for sort_by query', () => {
@@ -108,6 +118,15 @@ describe('GET /api/articles', () => {
           .then(({ body }) => {
             expect(body.status).toBe(400);
             expect(body.msg).toBe('bad request');
+          });
+      });
+      test('400: Responds with "resource not found" when passed a valid topic that does not exist', () => {
+        return request(app)
+          .get('/api/articles?topic=banana')
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.status).toBe(404);
+            expect(body.msg).toBe('resource not found');
           });
       });
     });

@@ -14,24 +14,35 @@ const fetchArticleById = (articleId) => {
 };
 
 const fetchArticles = (query) => {
+  const promises = [];
+
   let queryString = `SELECT articles.article_id, articles.title, articles.topic, articles.created_at,
        articles.votes, articles.article_img_url, COUNT(comments.comment_id) AS comment_count 
        FROM articles LEFT JOIN comments 
-       ON articles.article_id = comments.article_id 
-       GROUP BY articles.article_id, articles.title, articles.topic, articles.created_at, articles.votes, articles.article_img_url `;
+       ON articles.article_id = comments.article_id `;
+
+  const groupBy = `GROUP BY articles.article_id, articles.title, articles.topic, articles.created_at, articles.votes, articles.article_img_url `;
+  const queryFormatParams = [];
   const queryParams = [];
 
-  if (query['sort_by']) {
-    queryString += `ORDER BY %I `;
-    queryParams.push(query['sort_by']);
-  } else if (query.order === 'asc') {
-    queryString += `ORDER BY articles.created_at ASC`;
-  } else {
-    queryString += 'ORDER BY articles.created_at DESC';
+  if (query.topic) {
+    promises.push(checkExists('articles', 'topic', query.topic));
+    queryString += `WHERE articles.topic = $1 `;
+    queryParams.push(query.topic);
   }
 
-  const formattedString = format(queryString, queryParams[0]);
-  return db.query(formattedString).then(({ rows }) => {
+  if (query['sort_by']) {
+    queryString += groupBy + `ORDER BY articles.%I `;
+    queryFormatParams.push(query['sort_by']);
+  } else if (query.order === 'asc') {
+    queryString += groupBy + `ORDER BY articles.created_at ASC`;
+  } else {
+    queryString += groupBy + 'ORDER BY articles.created_at DESC';
+  }
+
+  const formattedString = format(queryString, queryFormatParams[0]);
+  promises.unshift(db.query(formattedString, queryParams));
+  return Promise.all(promises).then(([{ rows }]) => {
     return rows;
   });
 };

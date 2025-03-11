@@ -99,6 +99,16 @@ describe('GET /api/articles', () => {
           expect(articles).toBeSortedBy('created_at', { descending: true });
         });
     });
+    test('200: Responds with an array of article objected filetered by the passed topic', () => {
+      return request(app)
+        .get('/api/articles?topic=mitch')
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          articles.forEach((article) => {
+            expect(article.topic).toBe('mitch');
+          });
+        });
+    });
 
     describe('error handling: queries', () => {
       test('400: Responds with "bad request" when passed an invalid column name for sort_by query', () => {

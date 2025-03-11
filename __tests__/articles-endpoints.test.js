@@ -175,17 +175,17 @@ describe('POST /api/articles/:article_id/comments', () => {
           expect(body.msg).toBe('resource not found');
         });
     });
-    test('404: Responds with "resource not found" when passed username that does not exist', () => {
+    test('400: Responds with "bad request" when passed username that does not exist', () => {
       return request(app)
         .post('/api/articles/3/comments')
         .send({
           username: 'banana',
           body: 'Test body 1',
         })
-        .expect(404)
+        .expect(400)
         .then(({ body }) => {
-          expect(body.status).toBe(404);
-          expect(body.msg).toBe('resource not found');
+          expect(body.status).toBe(400);
+          expect(body.msg).toBe('bad request');
         });
     });
     test('400: Responds with "bad request" when post body does not have required fields', () => {
@@ -232,14 +232,14 @@ describe('PATCH /api/articles/:article_id', () => {
           expect(body.msg).toBe('bad request');
         });
     });
-    test('404: Responds with "resource not found" when passed a valid article id that does not exist', () => {
+    test('404: Responds with "article not found" when passed a valid article id that does not exist', () => {
       return request(app)
         .patch('/api/articles/99999')
         .send({ inc_votes: 1 })
         .expect(404)
         .then(({ body }) => {
           expect(body.status).toBe(404);
-          expect(body.msg).toBe('resource not found');
+          expect(body.msg).toBe('article not found');
         });
     });
     test('400: Reponds with "bad request" when passed an invalid value for inc_votes', () => {

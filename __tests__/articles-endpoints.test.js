@@ -231,6 +231,16 @@ describe('PATCH /api/articles/:article_id', () => {
           expect(body.msg).toBe('bad request');
         });
     });
+    test('404: Responds with "resource not found" when passed a valid article id that does not exist', () => {
+      return request(app)
+        .patch('/api/articles/99999')
+        .send({ inc_votes: 1 })
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.status).toBe(404);
+          expect(body.msg).toBe('resource not found');
+        });
+    });
   });
 });
 

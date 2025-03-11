@@ -60,17 +60,18 @@ const addCommentByArticleId = ({ username, body, article_id }) => {
 };
 
 const updateArticleById = ({ inc_votes, article_id }) => {
-  return db
-    .query(
-      `UPDATE articles
+  const promises = [checkExists('articles', 'article_id', article_id)];
+
+  const queryString = `UPDATE articles
     SET votes = votes + $1
     WHERE article_id = $2
-    RETURNING *`,
-      [inc_votes, article_id]
-    )
-    .then(({ rows }) => {
-      return rows[0];
-    });
+    RETURNING *`;
+
+  promises.push(db.query(queryString, [inc_votes, article_id]));
+
+  return Promise.all(promises).then(([_, { rows }]) => {
+    return rows[0];
+  });
 };
 
 module.exports = {

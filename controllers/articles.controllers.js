@@ -2,6 +2,7 @@ const {
   fetchArticleById,
   fetchArticles,
   fetchCommentsByArticleId,
+  addCommentByArticleId,
 } = require('../models');
 
 const getArticleById = (req, res, next) => {
@@ -32,4 +33,17 @@ const getCommentsByArticleId = (req, res, next) => {
     });
 };
 
-module.exports = { getArticleById, getArticles, getCommentsByArticleId };
+const postCommentByArticleId = (req, res, err) => {
+  const { username, body } = req.body;
+  const { article_id } = req.params;
+  addCommentByArticleId({ username, body, article_id }).then((comment) => {
+    res.status(201).send({ comment });
+  });
+};
+
+module.exports = {
+  getArticleById,
+  getArticles,
+  getCommentsByArticleId,
+  postCommentByArticleId,
+};

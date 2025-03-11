@@ -126,3 +126,28 @@ describe('GET /api/articles/:article_id/comments', () => {
     });
   });
 });
+
+describe('POST /api/articles/:article_id/comments', () => {
+  test('201: Responds with the posted comment', () => {
+    const newComment = {
+      username: 'rogersop',
+      body: 'Test body 1',
+    };
+    return request(app)
+      .post('/api/articles/3/comments')
+      .send(newComment)
+      .expect(201)
+      .then(({ body: { comment } }) => {
+        expect(comment).toEqual(
+          expect.objectContaining({
+            comment_id: expect.any(Number),
+            article_id: 3,
+            body: 'Test body 1',
+            votes: expect.any(Number),
+            author: 'rogersop',
+            created_at: expect.any(String),
+          })
+        );
+      });
+  });
+});

@@ -3,6 +3,7 @@ const {
   fetchArticleById,
   fetchArticles,
   fetchCommentsByArticleId,
+  addCommentByArticleId,
 } = require('./articles.models');
 
 module.exports = {
@@ -10,4 +11,5 @@ module.exports = {
   fetchArticleById,
   fetchArticles,
   fetchCommentsByArticleId,
+  addCommentByArticleId,
 };

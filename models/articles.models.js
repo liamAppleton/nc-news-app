@@ -1,4 +1,6 @@
 const db = require('../db/connection.js');
+const format = require('pg-format');
+const { checkExists } = require('../db/seeds/utils.js');
 
 const fetchArticleById = (articleId) => {
   return db
@@ -42,4 +44,21 @@ const fetchCommentsByArticleId = (articleId) => {
     });
 };
 
-module.exports = { fetchArticleById, fetchArticles, fetchCommentsByArticleId };
+const addCommentByArticleId = ({ username, body, article_id }) => {
+  const queryString = format(
+    `INSERT INTO comments
+  (author, body, article_id, created_at)
+  VALUES %L RETURNING *`,
+    [[username, body, article_id, new Date()]]
+  );
+  return db.query(queryString).then(({ rows }) => {
+    return rows[0];
+  });
+};
+
+module.exports = {
+  fetchArticleById,
+  fetchArticles,
+  fetchCommentsByArticleId,
+  addCommentByArticleId,
+};

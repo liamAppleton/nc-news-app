@@ -52,5 +52,3 @@ describe('GET /api/users/:username', () => {
       });
   });
 });
-
-//! change test for banana topic in articles

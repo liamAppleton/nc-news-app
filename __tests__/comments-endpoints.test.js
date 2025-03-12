@@ -33,6 +33,19 @@ describe('PATCH /api/comments/:comment_id', () => {
         expect(comment.votes).toBe(12);
       });
   });
+
+  describe('error handling', () => {
+    test('400: Responds with "bad request" when passed an invalid comment id', () => {
+      return request(app)
+        .patch('/api/comments/banana')
+        .send({ inc_votes: 2 })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.status).toBe(400);
+          expect(body.msg).toBe('bad request');
+        });
+    });
+  });
 });
 
 describe('DELETE /api/comments/:comment_id', () => {

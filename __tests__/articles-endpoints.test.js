@@ -277,6 +277,15 @@ describe('PATCH /api/articles/:article_id', () => {
         );
       });
   });
+  test('Works when decrementing votes', () => {
+    return request(app)
+      .patch('/api/articles/3')
+      .send({ inc_votes: -2 })
+      .expect(200)
+      .then(({ body: { article } }) => {
+        expect(article.votes).toBe(-2);
+      });
+  });
 
   describe('error handling', () => {
     test('400: Responds with "bad request" when passed an invalid article id', () => {

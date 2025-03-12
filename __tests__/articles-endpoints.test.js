@@ -124,7 +124,6 @@ describe('POST /api/articles', () => {
         );
       });
   });
-
   test('Responds with N/A for article_img_url if one is not provided', () => {
     delete newArticle['article_img_url'];
     return request(app)
@@ -134,6 +133,20 @@ describe('POST /api/articles', () => {
       .then(({ body: { article } }) => {
         expect(article['article_img_url']).toBe('N/A');
       });
+  });
+
+  describe('error handling', () => {
+    test('400: Responds with "bad request" when passed an author that does not exist', () => {
+      newArticle.author = 'banana';
+      return request(app)
+        .post('/api/articles')
+        .send(newArticle)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.status).toBe(400);
+          expect(body.msg).toBe('bad request');
+        });
+    });
   });
 });
 

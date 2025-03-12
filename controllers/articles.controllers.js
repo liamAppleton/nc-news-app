@@ -31,11 +31,13 @@ const getArticles = (req, res, next) => {
 
 const postArticle = (req, res, next) => {
   const { author, title, body, topic, article_img_url } = req.body;
-  addArticle({ author, title, body, topic, article_img_url }).then(
-    (article) => {
+  addArticle({ author, title, body, topic, article_img_url })
+    .then((article) => {
       res.status(201).send({ article });
-    }
-  );
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
 
 const getCommentsByArticleId = (req, res, next) => {

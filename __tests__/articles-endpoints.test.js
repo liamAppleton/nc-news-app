@@ -147,7 +147,18 @@ describe('POST /api/articles', () => {
           expect(body.msg).toBe('bad request');
         });
     });
-    test('400: Responds with "bad request" when title no provided', () => {
+    test('400: Responds with "bad request" when passed a topic that does not exist', () => {
+      newArticle.topic = 'banana';
+      return request(app)
+        .post('/api/articles')
+        .send(newArticle)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.status).toBe(400);
+          expect(body.msg).toBe('bad request');
+        });
+    });
+    test('400: Responds with "bad request" when title not provided', () => {
       delete newArticle.title;
       return request(app)
         .post('/api/articles')

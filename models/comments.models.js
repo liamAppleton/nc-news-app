@@ -1,6 +1,20 @@
 const db = require('../db/connection.js');
 const { checkExists } = require('../db/seeds/utils.js');
 
+const updateCommentById = ({ inc_votes, comment_id }) => {
+  return db
+    .query(
+      `UPDATE comments
+    SET votes = votes + $1
+    WHERE comment_id = $2
+    RETURNING *`,
+      [inc_votes, comment_id]
+    )
+    .then(({ rows }) => {
+      return rows[0];
+    });
+};
+
 const removeComment = (commentId) => {
   const promises = [checkExists('comments', 'comment_id', commentId)];
 
@@ -12,4 +26,4 @@ const removeComment = (commentId) => {
   });
 };
 
-module.exports = { removeComment };
+module.exports = { updateCommentById, removeComment };

@@ -7,6 +7,25 @@ const data = require('../db/data/test-data');
 beforeEach(() => seed(data));
 afterAll(() => db.end());
 
+describe('PATCH /api/comments/:comment_id', () => {
+  test('200: Responds with the updated comment object', () => {
+    return request(app)
+      .patch('/api/comments/2')
+      .send({ inc_votes: 2 })
+      .expect(200)
+      .then(({ body: { comment } }) => {
+        expect(comment).toEqual({
+          comment_id: 2,
+          article_id: 1,
+          body: 'The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.',
+          votes: 16,
+          author: 'butter_bridge',
+          created_at: '2020-10-31T03:03:00.000Z',
+        });
+      });
+  });
+});
+
 describe('DELETE /api/comments/:comment_id', () => {
   test('204: Responds with 204 status code', () => {
     return request(app).delete('/api/comments/2').expect(204);

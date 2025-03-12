@@ -1,13 +1,7 @@
 const db = require('../db/connection');
 
-const fetchTopics = (query) => {
-  let queryString = 'SELECT * FROM topics ';
-
-  if (query['sort_by']) {
-    queryString += `ORDER BY ${query['sort_by']} ASC`;
-  }
-
-  return db.query(queryString).then(({ rows }) => {
+const fetchTopics = () => {
+  return db.query('SELECT * FROM topics').then(({ rows }) => {
     return rows;
   });
 };

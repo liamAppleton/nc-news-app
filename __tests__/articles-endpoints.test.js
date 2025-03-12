@@ -53,10 +53,7 @@ describe('GET /api/articles', () => {
       .get('/api/articles')
       .expect(200)
       .then(({ body: { articles } }) => {
-        const articlesSorted = articles.toSorted((a, b) => {
-          return new Date(b['created_at']) - new Date(a['created_at']);
-        });
-        expect(articles).toEqual(articlesSorted);
+        expect(articles).toBeSortedBy('created_at', { descending: true });
         expect(articles.length).not.toBe(0);
 
         articles.forEach((article) => {
@@ -100,7 +97,7 @@ describe('GET /api/articles', () => {
           expect(articles).toBeSortedBy('created_at', { descending: true });
         });
     });
-    test('200: Responds with an array of article objected filtered by the passed topic', () => {
+    test('200: Responds with an array of article objects filtered by the passed topic', () => {
       return request(app)
         .get('/api/articles?topic=mitch')
         .expect(200)
@@ -141,6 +138,7 @@ describe('GET /api/articles/:article_id/comments', () => {
       .expect(200)
       .then(({ body: { comments } }) => {
         expect(comments.length).toBe(2);
+
         comments.forEach((comment) => {
           expect(comment).toEqual(
             expect.objectContaining({

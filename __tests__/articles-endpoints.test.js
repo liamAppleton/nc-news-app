@@ -158,7 +158,7 @@ describe('POST /api/articles', () => {
           expect(body.msg).toBe('bad request');
         });
     });
-    test('400: Responds with "bad request" when title not provided', () => {
+    test('400: Responds with "bad request" when request body is missing fields', () => {
       delete newArticle.title;
       return request(app)
         .post('/api/articles')

@@ -55,6 +55,24 @@ const fetchArticles = (query) => {
   });
 };
 
+const addArticle = ({ author, title, body, topic, article_img_url }) => {
+  const queryString = format(
+    `INSERT INTO articles
+  (author, title, body, topic, article_img_url, votes, created_at)
+  VALUES %L RETURNING article_id`,
+    [[author, title, body, topic, article_img_url, 0, new Date()]]
+  );
+  return db
+    .query(queryString)
+    .then(({ rows }) => {
+      const articleId = rows[0]['article_id'];
+      return fetchArticleById(articleId);
+    })
+    .then((article) => {
+      return article;
+    });
+};
+
 const fetchCommentsByArticleId = (articleId) => {
   const promises = [checkExists('articles', 'article_id', articleId)];
 
@@ -105,6 +123,7 @@ const updateArticleById = ({ inc_votes, article_id }) => {
 module.exports = {
   fetchArticleById,
   fetchArticles,
+  addArticle,
   fetchCommentsByArticleId,
   addCommentByArticleId,
   updateArticleById,

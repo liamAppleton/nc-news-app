@@ -1,6 +1,7 @@
 const {
   fetchArticleById,
   fetchArticles,
+  addArticle,
   fetchCommentsByArticleId,
   addCommentByArticleId,
   updateArticleById,
@@ -26,6 +27,15 @@ const getArticles = (req, res, next) => {
     .catch((err) => {
       next(err);
     });
+};
+
+const postArticle = (req, res, next) => {
+  const { author, title, body, topic, article_img_url } = req.body;
+  addArticle({ author, title, body, topic, article_img_url }).then(
+    (article) => {
+      res.status(201).send({ article });
+    }
+  );
 };
 
 const getCommentsByArticleId = (req, res, next) => {
@@ -66,6 +76,7 @@ const patchArticleById = (req, res, next) => {
 module.exports = {
   getArticleById,
   getArticles,
+  postArticle,
   getCommentsByArticleId,
   postCommentByArticleId,
   patchArticleById,

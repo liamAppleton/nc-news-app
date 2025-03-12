@@ -7,46 +7,6 @@ const data = require('../db/data/test-data');
 beforeEach(() => seed(data));
 afterAll(() => db.end());
 
-describe('GET /api/articles/:article_id', () => {
-  test('200: Responds with an article object with requested article id', () => {
-    return request(app)
-      .get('/api/articles/1')
-      .expect(200)
-      .then(({ body: { article } }) => {
-        expect(article).toEqual({
-          article_id: 1,
-          title: 'Living in the shadow of a great man',
-          topic: 'mitch',
-          author: 'butter_bridge',
-          body: 'I find this existence challenging',
-          created_at: '2020-07-09T20:11:00.000Z',
-          votes: 100,
-          article_img_url:
-            'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
-          comment_count: '11',
-        });
-      });
-  });
-  test('400: Responds with "bad request" when given an invalid article id', () => {
-    return request(app)
-      .get('/api/articles/banana')
-      .expect(400)
-      .then(({ body }) => {
-        expect(body.status).toBe(400);
-        expect(body.msg).toBe('bad request');
-      });
-  });
-  test('404: Responds with "article not found" when given an article id that does not exist', () => {
-    return request(app)
-      .get('/api/articles/99999')
-      .expect(404)
-      .then(({ body }) => {
-        expect(body.status).toBe(404);
-        expect(body.msg).toBe('article not found');
-      });
-  });
-});
-
 describe('GET /api/articles', () => {
   test('200: Responds with an array of article objects in reverse date order and each with a comment_count property', () => {
     return request(app)
@@ -127,6 +87,144 @@ describe('GET /api/articles', () => {
             expect(body.msg).toBe('resource not found');
           });
       });
+    });
+  });
+});
+
+describe('POST /api/articles', () => {
+  let newArticle;
+  beforeEach(() => {
+    newArticle = {
+      author: 'rogersop',
+      title: 'Test article title',
+      body: 'Test article body',
+      topic: 'mitch',
+      article_img_url: 'http://test.com',
+    };
+  });
+
+  test('201: Responds with the posted article', () => {
+    return request(app)
+      .post('/api/articles')
+      .send(newArticle)
+      .expect(201)
+      .then(({ body: { article } }) => {
+        expect(article).toEqual(
+          expect.objectContaining({
+            article_id: expect.any(Number),
+            author: 'rogersop',
+            title: 'Test article title',
+            body: 'Test article body',
+            topic: 'mitch',
+            article_img_url: 'http://test.com',
+            votes: 0,
+            created_at: expect.any(String),
+            comment_count: '0',
+          })
+        );
+      });
+  });
+});
+
+describe('GET /api/articles/:article_id', () => {
+  test('200: Responds with an article object with requested article id', () => {
+    return request(app)
+      .get('/api/articles/1')
+      .expect(200)
+      .then(({ body: { article } }) => {
+        expect(article).toEqual({
+          article_id: 1,
+          title: 'Living in the shadow of a great man',
+          topic: 'mitch',
+          author: 'butter_bridge',
+          body: 'I find this existence challenging',
+          created_at: '2020-07-09T20:11:00.000Z',
+          votes: 100,
+          article_img_url:
+            'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+          comment_count: '11',
+        });
+      });
+  });
+  test('400: Responds with "bad request" when given an invalid article id', () => {
+    return request(app)
+      .get('/api/articles/banana')
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.status).toBe(400);
+        expect(body.msg).toBe('bad request');
+      });
+  });
+  test('404: Responds with "article not found" when given an article id that does not exist', () => {
+    return request(app)
+      .get('/api/articles/99999')
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.status).toBe(404);
+        expect(body.msg).toBe('article not found');
+      });
+  });
+});
+
+describe('PATCH /api/articles/:article_id', () => {
+  test('200: Reponds with the updated article object', () => {
+    return request(app)
+      .patch('/api/articles/3')
+      .send({ inc_votes: 2 })
+      .expect(200)
+      .then(({ body: { article } }) => {
+        expect(article).toEqual(
+          expect.objectContaining({
+            article_id: 3,
+            title: expect.any(String),
+            topic: expect.any(String),
+            created_at: expect.any(String),
+            votes: 2,
+            article_img_url: expect.any(String),
+          })
+        );
+      });
+  });
+  test('Works when decrementing votes', () => {
+    return request(app)
+      .patch('/api/articles/3')
+      .send({ inc_votes: -2 })
+      .expect(200)
+      .then(({ body: { article } }) => {
+        expect(article.votes).toBe(-2);
+      });
+  });
+
+  describe('error handling', () => {
+    test('400: Responds with "bad request" when passed an invalid article id', () => {
+      return request(app)
+        .patch('/api/articles/banana')
+        .send({ inc_votes: 1 })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.status).toBe(400);
+          expect(body.msg).toBe('bad request');
+        });
+    });
+    test('404: Responds with "article not found" when passed a valid article id that does not exist', () => {
+      return request(app)
+        .patch('/api/articles/99999')
+        .send({ inc_votes: 1 })
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.status).toBe(404);
+          expect(body.msg).toBe('article not found');
+        });
+    });
+    test('400: Reponds with "bad request" when passed an invalid value for inc_votes', () => {
+      return request(app)
+        .patch('/api/articles/3')
+        .send({ inc_votes: 'banana' })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.status).toBe(400);
+          expect(body.msg).toBe('bad request');
+        });
     });
   });
 });
@@ -249,69 +347,6 @@ describe('POST /api/articles/:article_id/comments', () => {
       return request(app)
         .post('/api/articles/3/comments')
         .send({ username: 'rogersop' })
-        .expect(400)
-        .then(({ body }) => {
-          expect(body.status).toBe(400);
-          expect(body.msg).toBe('bad request');
-        });
-    });
-  });
-});
-
-describe('PATCH /api/articles/:article_id', () => {
-  test('200: Reponds with the updated article object', () => {
-    return request(app)
-      .patch('/api/articles/3')
-      .send({ inc_votes: 2 })
-      .expect(200)
-      .then(({ body: { article } }) => {
-        expect(article).toEqual(
-          expect.objectContaining({
-            article_id: 3,
-            title: expect.any(String),
-            topic: expect.any(String),
-            created_at: expect.any(String),
-            votes: 2,
-            article_img_url: expect.any(String),
-          })
-        );
-      });
-  });
-  test('Works when decrementing votes', () => {
-    return request(app)
-      .patch('/api/articles/3')
-      .send({ inc_votes: -2 })
-      .expect(200)
-      .then(({ body: { article } }) => {
-        expect(article.votes).toBe(-2);
-      });
-  });
-
-  describe('error handling', () => {
-    test('400: Responds with "bad request" when passed an invalid article id', () => {
-      return request(app)
-        .patch('/api/articles/banana')
-        .send({ inc_votes: 1 })
-        .expect(400)
-        .then(({ body }) => {
-          expect(body.status).toBe(400);
-          expect(body.msg).toBe('bad request');
-        });
-    });
-    test('404: Responds with "article not found" when passed a valid article id that does not exist', () => {
-      return request(app)
-        .patch('/api/articles/99999')
-        .send({ inc_votes: 1 })
-        .expect(404)
-        .then(({ body }) => {
-          expect(body.status).toBe(404);
-          expect(body.msg).toBe('article not found');
-        });
-    });
-    test('400: Reponds with "bad request" when passed an invalid value for inc_votes', () => {
-      return request(app)
-        .patch('/api/articles/3')
-        .send({ inc_votes: 'banana' })
         .expect(400)
         .then(({ body }) => {
           expect(body.status).toBe(400);

@@ -56,6 +56,7 @@ const fetchArticles = (query) => {
 };
 
 const addArticle = ({ author, title, body, topic, article_img_url }) => {
+  if (!article_img_url) article_img_url = 'N/A';
   const queryString = format(
     `INSERT INTO articles
   (author, title, body, topic, article_img_url, votes, created_at)

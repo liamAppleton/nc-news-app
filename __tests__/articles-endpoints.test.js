@@ -124,6 +124,17 @@ describe('POST /api/articles', () => {
         );
       });
   });
+
+  test('Responds with N/A for article_img_url if one is not provided', () => {
+    delete newArticle['article_img_url'];
+    return request(app)
+      .post('/api/articles')
+      .send(newArticle)
+      .expect(201)
+      .then(({ body: { article } }) => {
+        expect(article['article_img_url']).toBe('N/A');
+      });
+  });
 });
 
 describe('GET /api/articles/:article_id', () => {

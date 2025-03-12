@@ -11,6 +11,9 @@ const updateCommentById = ({ inc_votes, comment_id }) => {
       [inc_votes, comment_id]
     )
     .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({ status: 404, msg: 'comment not found' });
+      }
       return rows[0];
     });
 };

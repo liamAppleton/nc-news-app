@@ -45,6 +45,16 @@ describe('PATCH /api/comments/:comment_id', () => {
           expect(body.msg).toBe('bad request');
         });
     });
+    test('404: Responds with "comment not found" when passed a valid comment id that does not exist', () => {
+      return request(app)
+        .patch('/api/comments/99999')
+        .send({ inc_votes: 2 })
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.status).toBe(404);
+          expect(body.msg).toBe('comment not found');
+        });
+    });
   });
 });
 

@@ -15,11 +15,4 @@ if (ENV === 'production') {
   config.max = 2;
 }
 
-//! not sure what to do about this????
-// if (!process.env.PGDATABASE) {
-//     throw new Error("No PGDATABASE configured")
-// } else {
-//     console.log(`Connected to ${process.env.PGDATABASE}`)
-// }
-
 module.exports = new Pool(config);

@@ -25,8 +25,6 @@ app.use('/api', apiRouter);
 
 app.get('/api', getEndpoints);
 
-app.delete('/api/comments/:comment_id', deleteComment);
-
 app.all('*', handleNotARouteError);
 
 app.use(handlePsqlError);

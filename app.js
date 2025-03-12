@@ -17,12 +17,15 @@ const {
   handleCustomError,
   handleServerError,
 } = require('./error-handlers/error-handlers.controllers');
+const apiRouter = require('./routes/api-router.js');
 
 app.use(express.json());
 
+app.use('/api', apiRouter);
+
 app.get('/api', getEndpoints);
 
-app.get('/api/topics', getTopics);
+// app.get('/api/topics', getTopics);
 
 app.get('/api/articles', getArticles);
 

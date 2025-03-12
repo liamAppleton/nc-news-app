@@ -1,17 +1,6 @@
 const express = require('express');
 const app = express();
 const {
-  getEndpoints,
-  getTopics,
-  getArticleById,
-  getArticles,
-  getCommentsByArticleId,
-  postCommentByArticleId,
-  patchArticleById,
-  deleteComment,
-  getUsers,
-} = require('./controllers');
-const {
   handleNotARouteError,
   handlePsqlError,
   handleCustomError,
@@ -22,8 +11,6 @@ const apiRouter = require('./routes/api-router.js');
 app.use(express.json());
 
 app.use('/api', apiRouter);
-
-app.get('/api', getEndpoints);
 
 app.all('*', handleNotARouteError);
 

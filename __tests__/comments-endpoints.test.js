@@ -24,6 +24,15 @@ describe('PATCH /api/comments/:comment_id', () => {
         });
       });
   });
+  test('Works when decrementing votes', () => {
+    return request(app)
+      .patch('/api/comments/2')
+      .send({ inc_votes: -2 })
+      .expect(200)
+      .then(({ body: { comment } }) => {
+        expect(comment.votes).toBe(12);
+      });
+  });
 });
 
 describe('DELETE /api/comments/:comment_id', () => {

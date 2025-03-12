@@ -25,12 +25,4 @@ describe('GET /api/topics', () => {
         });
       });
   });
-  test.only('test', () => {
-    return request(app)
-      .get('/api/topics')
-      .expect(200)
-      .then((res) => {
-        console.log(res.body);
-      });
-  });
 });

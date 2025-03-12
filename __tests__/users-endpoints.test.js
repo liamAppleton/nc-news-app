@@ -42,4 +42,15 @@ describe('GET /api/users/:username', () => {
         });
       });
   });
+  test('400: Responds with "user not found" when a username that does not exist', () => {
+    return request(app)
+      .get('/api/users/banana')
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.status).toBe(404);
+        expect(body.msg).toBe('user not found');
+      });
+  });
 });
+
+//! change test for banana topic in articles

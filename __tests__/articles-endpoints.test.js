@@ -147,6 +147,17 @@ describe('POST /api/articles', () => {
           expect(body.msg).toBe('bad request');
         });
     });
+    test('400: Responds with "bad request" when title no provided', () => {
+      delete newArticle.title;
+      return request(app)
+        .post('/api/articles')
+        .send(newArticle)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.status).toBe(400);
+          expect(body.msg).toBe('bad request');
+        });
+    });
   });
 });
 
@@ -355,12 +366,10 @@ describe('POST /api/articles/:article_id/comments', () => {
         });
     });
     test('400: Responds with "bad request" when passed username that does not exist', () => {
+      newComment.username = 'banana';
       return request(app)
         .post('/api/articles/3/comments')
-        .send({
-          username: 'banana',
-          body: 'Test body 1',
-        })
+        .send(newComment)
         .expect(400)
         .then(({ body }) => {
           expect(body.status).toBe(400);
@@ -368,9 +377,10 @@ describe('POST /api/articles/:article_id/comments', () => {
         });
     });
     test('400: Responds with "bad request" when post body does not have required fields', () => {
+      delete newComment.body;
       return request(app)
         .post('/api/articles/3/comments')
-        .send({ username: 'rogersop' })
+        .send(newComment)
         .expect(400)
         .then(({ body }) => {
           expect(body.status).toBe(400);

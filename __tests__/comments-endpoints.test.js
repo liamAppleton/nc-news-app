@@ -55,6 +55,16 @@ describe('PATCH /api/comments/:comment_id', () => {
           expect(body.msg).toBe('comment not found');
         });
     });
+    test('400: Responds with "bad request" when passed an invalid value for inc_votes', () => {
+      return request(app)
+        .patch('/api/comments/2')
+        .send({ inc_votes: 'banana' })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.status).toBe(400);
+          expect(body.msg).toBe('bad request');
+        });
+    });
   });
 });
 

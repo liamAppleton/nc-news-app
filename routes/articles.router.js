@@ -14,8 +14,8 @@ articlesRouter
   .route('/:article_id')
   .get(getArticleById)
   .patch(patchArticleById);
-articlesRouter
 
+articlesRouter
   .route('/:article_id/comments')
   .get(getCommentsByArticleId)
   .post(postCommentByArticleId);

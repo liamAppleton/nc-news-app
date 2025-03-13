@@ -404,7 +404,16 @@ describe('GET /api/articles', () => {
 
       test('400: Responds with "bad request" when passed an invalid limit value', () => {
         return request(app)
-          .get('/api/articles?limit=banana')
+          .get('/api/articles?limit=banana&p=1')
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.status).toBe(400);
+            expect(body.msg).toBe('bad request');
+          });
+      });
+      test('400: Responds with "bad request" when passed an invalid page value', () => {
+        return request(app)
+          .get('/api/articles?limit=4&p=banana')
           .expect(400)
           .then(({ body }) => {
             expect(body.status).toBe(400);

@@ -89,6 +89,17 @@ describe('GET /api/articles', () => {
       });
     });
   });
+
+  describe('pagination', () => {
+    test('200: Responds with an array of article objects limited to the value passed', () => {
+      return request(app)
+        .get('/api/articles?limit=5')
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles.length).toBe(5);
+        });
+    });
+  });
 });
 
 describe('POST /api/articles', () => {

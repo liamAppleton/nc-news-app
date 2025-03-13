@@ -30,6 +30,8 @@ const fetchArticles = (query) => {
        ON articles.article_id = comments.article_id `;
 
   const groupBy = `GROUP BY articles.article_id, articles.title, articles.topic, articles.created_at, articles.votes, articles.article_img_url `;
+  let limit = `LIMIT `;
+
   const queryFormatParams = [];
   const queryParams = [];
 
@@ -39,16 +41,23 @@ const fetchArticles = (query) => {
     queryParams.push(query.topic);
   }
 
+  if (query.limit) {
+    limit += `${query.topic ? '$2 ' : '$1 '}`;
+    queryParams.push(query.limit);
+  } else {
+    limit += '10 ';
+  }
+
   if (query['sort_by']) {
     queryString += groupBy + `ORDER BY articles.%I `;
     queryFormatParams.push(query['sort_by']);
   } else if (query.order === 'asc') {
-    queryString += groupBy + `ORDER BY articles.created_at ASC`;
+    queryString += groupBy + `ORDER BY articles.created_at ASC `;
   } else {
-    queryString += groupBy + 'ORDER BY articles.created_at DESC';
+    queryString += groupBy + 'ORDER BY articles.created_at DESC ';
   }
 
-  const formattedString = format(queryString, queryFormatParams[0]);
+  const formattedString = format(queryString + limit, queryFormatParams[0]);
   promises.unshift(db.query(formattedString, queryParams));
   return Promise.all(promises).then(([{ rows }]) => {
     return rows;

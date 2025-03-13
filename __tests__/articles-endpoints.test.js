@@ -894,6 +894,23 @@ describe('GET /api/articles/:article_id/comments', () => {
           ]);
         });
     });
+    test('200: Responds with single comment object when passed a value for page and "1" for limit', () => {
+      return request(app)
+        .get('/api/articles/1/comments?limit=1&p=4')
+        .expect(200)
+        .then(({ body: { comments } }) => {
+          expect(comments).toEqual([
+            {
+              comment_id: 13,
+              article_id: 1,
+              body: 'Fruit pastilles',
+              votes: 0,
+              author: 'icellusedkars',
+              created_at: '2020-06-15T10:25:00.000Z',
+            },
+          ]);
+        });
+    });
   });
 });
 

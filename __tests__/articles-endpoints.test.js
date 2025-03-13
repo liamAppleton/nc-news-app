@@ -371,6 +371,31 @@ describe('GET /api/articles', () => {
           }
         );
     });
+    test('Responds with single article object when passed a value for page and "1" for limit', () => {
+      return request(app)
+        .get('/api/articles?limit=1&p=4')
+        .expect(200)
+        .then(
+          ({
+            body: {
+              articles: { rows },
+            },
+          }) => {
+            expect(rows).toEqual([
+              {
+                article_id: 13,
+                title: 'Another article about Mitch',
+                topic: 'mitch',
+                created_at: '2020-10-11T11:24:00.000Z',
+                votes: 0,
+                article_img_url:
+                  'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+                comment_count: '0',
+              },
+            ]);
+          }
+        );
+    });
   });
 });
 

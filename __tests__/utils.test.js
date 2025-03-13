@@ -433,4 +433,10 @@ describe('countCommentsById', () => {
       expect(res).toBe(11);
     });
   });
+  test('404: Responds with "resource not found" when passed an article that does not exist', () => {
+    return countArticlesAfterFilter(99999).catch((err) => {
+      expect(err.status).toBe(404);
+      expect(err.msg).toBe('resource not found');
+    });
+  });
 });

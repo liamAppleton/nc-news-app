@@ -269,7 +269,7 @@ describe('GET /api/articles', () => {
           }
         );
     });
-    test('200: Responds with page 1 of 10 article objects when limit not specified', () => {
+    test('200: Responds with page 1 of up to 10 article objects when limit not specified', () => {
       return request(app)
         .get('/api/articles?p=1')
         .expect(200)
@@ -801,6 +801,95 @@ describe('GET /api/articles/:article_id/comments', () => {
               votes: 0,
               author: 'icellusedkars',
               created_at: '2020-04-14T20:19:00.000Z',
+            },
+          ]);
+        });
+    });
+    test('200: Responds with page 1 of up to 10 comment objects when limit not specified', () => {
+      return request(app)
+        .get('/api/articles/1/comments?p=1')
+        .expect(200)
+        .then(({ body: { comments } }) => {
+          expect(comments).toEqual([
+            {
+              comment_id: 5,
+              article_id: 1,
+              body: 'I hate streaming noses',
+              votes: 0,
+              author: 'icellusedkars',
+              created_at: '2020-11-03T21:00:00.000Z',
+            },
+            {
+              comment_id: 2,
+              article_id: 1,
+              body: 'The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.',
+              votes: 14,
+              author: 'butter_bridge',
+              created_at: '2020-10-31T03:03:00.000Z',
+            },
+            {
+              comment_id: 18,
+              article_id: 1,
+              body: 'This morning, I showered for nine minutes.',
+              votes: 16,
+              author: 'butter_bridge',
+              created_at: '2020-07-21T00:20:00.000Z',
+            },
+            {
+              comment_id: 13,
+              article_id: 1,
+              body: 'Fruit pastilles',
+              votes: 0,
+              author: 'icellusedkars',
+              created_at: '2020-06-15T10:25:00.000Z',
+            },
+            {
+              comment_id: 7,
+              article_id: 1,
+              body: 'Lobster pot',
+              votes: 0,
+              author: 'icellusedkars',
+              created_at: '2020-05-15T20:19:00.000Z',
+            },
+            {
+              comment_id: 8,
+              article_id: 1,
+              body: 'Delicious crackerbreads',
+              votes: 0,
+              author: 'icellusedkars',
+              created_at: '2020-04-14T20:19:00.000Z',
+            },
+            {
+              comment_id: 6,
+              article_id: 1,
+              body: 'I hate streaming eyes even more',
+              votes: 0,
+              author: 'icellusedkars',
+              created_at: '2020-04-11T21:02:00.000Z',
+            },
+            {
+              comment_id: 12,
+              article_id: 1,
+              body: 'Massive intercranial brain haemorrhage',
+              votes: 0,
+              author: 'icellusedkars',
+              created_at: '2020-03-02T07:10:00.000Z',
+            },
+            {
+              comment_id: 3,
+              article_id: 1,
+              body: 'Replacing the quiet elegance of the dark suit and tie with the casual indifference of these muted earth tones is a form of fashion suicide, but, uh, call me crazy — onyou it works.',
+              votes: 100,
+              author: 'icellusedkars',
+              created_at: '2020-03-01T01:13:00.000Z',
+            },
+            {
+              comment_id: 4,
+              article_id: 1,
+              body: ' I carry a log — yes. Is it funny to you? It is not to me.',
+              votes: -100,
+              author: 'icellusedkars',
+              created_at: '2020-02-23T12:01:00.000Z',
             },
           ]);
         });

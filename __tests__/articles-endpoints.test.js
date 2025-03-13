@@ -158,6 +158,20 @@ describe('GET /api/articles', () => {
           expect(articles['total_count']).toBe(13);
         });
     });
+    test('200: Article limit will default to 10 when the value passed is greater than the number of articles returned', () => {
+      return request(app)
+        .get('/api/articles?limit=99999')
+        .expect(200)
+        .then(
+          ({
+            body: {
+              articles: { rows },
+            },
+          }) => {
+            expect(rows.length).toBe(10);
+          }
+        );
+    });
     test('total_count property will be the number of articles after a filter is applied', () => {
       return request(app)
         .get('/api/articles?topic=mitch&limit=5')
@@ -211,7 +225,7 @@ describe('GET /api/articles', () => {
           }
         );
     });
-    test('Responds with page 2 of article objects when passed "2" for page', () => {
+    test('200: Responds with page 2 of article objects when passed "2" for page', () => {
       return request(app)
         .get('/api/articles?limit=3&p=2')
         .expect(200)
@@ -256,7 +270,7 @@ describe('GET /api/articles', () => {
           }
         );
     });
-    test('Responds with page 1 of 10 article objects when limit not specified', () => {
+    test('200: Responds with page 1 of 10 article objects when limit not specified', () => {
       return request(app)
         .get('/api/articles?p=1')
         .expect(200)
@@ -371,7 +385,7 @@ describe('GET /api/articles', () => {
           }
         );
     });
-    test('Responds with single article object when passed a value for page and "1" for limit', () => {
+    test('200: Responds with single article object when passed a value for page and "1" for limit', () => {
       return request(app)
         .get('/api/articles?limit=1&p=4')
         .expect(200)
@@ -398,8 +412,6 @@ describe('GET /api/articles', () => {
     });
 
     describe('error handling: pagination', () => {
-      // invalid limit
-      // invalid page
       // limit greater than page etc.. workout calculations?
 
       test('400: Responds with "bad request" when passed an invalid limit value', () => {

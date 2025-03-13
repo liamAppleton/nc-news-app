@@ -159,6 +159,15 @@ const updateArticleById = ({ inc_votes, article_id }) => {
     });
 };
 
+const removeArticle = (articleId) => {
+  console.log(articleId);
+  return db
+    .query(`DELETE FROM articles WHERE article_id = $1`, [articleId])
+    .then(() => {
+      return;
+    });
+};
+
 module.exports = {
   fetchArticleById,
   fetchArticles,
@@ -166,4 +175,5 @@ module.exports = {
   fetchCommentsByArticleId,
   addCommentByArticleId,
   updateArticleById,
+  removeArticle,
 };

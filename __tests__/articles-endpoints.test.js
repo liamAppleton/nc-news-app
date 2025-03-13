@@ -1032,3 +1032,9 @@ describe('POST /api/articles/:article_id/comments', () => {
     });
   });
 });
+
+describe('DELETE /api/articles/:article_id', () => {
+  test('204: Responds with 204 status code', () => {
+    return request(app).delete('/api/articles/1').expect(204);
+  });
+});

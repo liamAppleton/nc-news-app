@@ -103,11 +103,23 @@ const fetchCommentsByArticleId = async ({ query, article_id }) => {
   const queryString = `SELECT comment_id, article_id, body, votes, author, created_at
     FROM comments WHERE article_id = $1
     ORDER BY created_at DESC `;
+  const queryParams = [article_id];
 
-  let limit = `LIMIT $2`;
-  if (!query.limit || query.limit === '' || query.limit > commentCount)
+  let limit = `LIMIT $2 `;
+  if (!query.limit || query.limit === '' || query.limit > commentCount) {
     query.limit = '10';
-  promises.push(db.query(queryString + limit, [article_id, query.limit]));
+  }
+  queryParams.push(query.limit);
+
+  if (query.p) {
+    const totalPages = Math.ceil(commentCount / query.limit);
+    query.p = query.p > totalPages ? totalPages : query.p;
+
+    limit += `OFFSET $3`;
+    const paginationValue = parseInt(query.p - 1) * parseInt(query.limit);
+    queryParams.push(paginationValue);
+  }
+  promises.push(db.query(queryString + limit, queryParams));
 
   return Promise.all(promises).then(([_, { rows }]) => {
     return rows;

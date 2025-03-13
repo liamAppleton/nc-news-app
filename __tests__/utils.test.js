@@ -396,14 +396,29 @@ describe('checkExists', () => {
 });
 
 describe('countArticlesAfterFilter', () => {
+  let query;
+  beforeEach(() => {
+    query = { topic: 'mitch' };
+  });
   test('should resolve with the total number of articles after a topic filter has been applied', () => {
-    const query = { topic: 'mitch' };
     return countArticlesAfterFilter(query).then((res) => {
       expect(res).toBe(12);
     });
   });
+  test('should ignore "limit" in query', () => {
+    query.limit = 5;
+    return countArticlesAfterFilter(query).then((res) => {
+      expect(res).toBe(12);
+    });
+  });
+  test('should not mutate query object', () => {
+    const queryCopy = { topic: 'mitch' };
+    return countArticlesAfterFilter(query).then((res) => {
+      expect(query).toEqual(queryCopy);
+    });
+  });
   test('404: Responds with "resource not found" when passed a topic that does not exist', () => {
-    const query = { topic: 'banana' };
+    query.topic = 'banana';
     return countArticlesAfterFilter(query).catch((err) => {
       expect(err.status).toBe(404);
       expect(err.msg).toBe('resource not found');

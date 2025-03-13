@@ -714,6 +714,17 @@ describe('GET /api/articles/:article_id/comments', () => {
         });
     });
   });
+
+  describe('pagination', () => {
+    test('200: Responds with an array of comment objects limited to the value passed', () => {
+      return request(app)
+        .get('/api/articles/1/comments?limit=5')
+        .expect(200)
+        .then(({ body: { comments } }) => {
+          expect(comments.length).toBe(5);
+        });
+    });
+  });
 });
 
 describe('POST /api/articles/:article_id/comments', () => {

@@ -121,7 +121,7 @@ describe('GET /api/articles', () => {
     });
   });
 
-  describe.only('pagination', () => {
+  describe('pagination', () => {
     test('200: Responds with an array of article objects limited to the value passed', () => {
       return request(app)
         .get('/api/articles?limit=5')

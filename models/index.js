@@ -1,4 +1,4 @@
-const { fetchTopics } = require('./topics.models');
+const { fetchTopics, addTopic } = require('./topics.models');
 const {
   fetchArticleById,
   fetchArticles,
@@ -12,6 +12,7 @@ const { fetchUsers, fetchUserByUsername } = require('./users.models');
 
 module.exports = {
   fetchTopics,
+  addTopic,
   fetchArticleById,
   fetchArticles,
   addArticle,

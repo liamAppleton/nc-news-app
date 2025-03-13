@@ -410,10 +410,53 @@ describe('GET /api/articles', () => {
           }
         );
     });
+    test('200: Responds with the last page of articles when the value passed to page is too high', () => {
+      return request(app)
+        .get('/api/articles?limit=5&p=99999')
+        .expect(200)
+        .then(
+          ({
+            body: {
+              articles: { rows },
+            },
+          }) => {
+            expect(rows).toEqual([
+              {
+                article_id: 8,
+                title: 'Does Mitch predate civilisation?',
+                topic: 'mitch',
+                created_at: '2020-04-17T01:08:00.000Z',
+                votes: 0,
+                article_img_url:
+                  'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+                comment_count: '0',
+              },
+              {
+                article_id: 11,
+                title: 'Am I a cat?',
+                topic: 'mitch',
+                created_at: '2020-01-15T22:21:00.000Z',
+                votes: 0,
+                article_img_url:
+                  'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+                comment_count: '0',
+              },
+              {
+                article_id: 7,
+                title: 'Z',
+                topic: 'mitch',
+                created_at: '2020-01-07T14:08:00.000Z',
+                votes: 0,
+                article_img_url:
+                  'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+                comment_count: '0',
+              },
+            ]);
+          }
+        );
+    });
 
     describe('error handling: pagination', () => {
-      // limit greater than page etc.. workout calculations?
-
       test('400: Responds with "bad request" when passed an invalid limit value', () => {
         return request(app)
           .get('/api/articles?limit=banana&p=1')

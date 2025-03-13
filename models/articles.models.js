@@ -61,6 +61,9 @@ const fetchArticles = async (query) => {
   queryParams.push(query.limit);
 
   if (query.p) {
+    const totalPages = Math.ceil(totalCount / query.limit);
+    query.p = query.p > totalPages ? totalPages : query.p;
+
     limit += `OFFSET ${query.topic ? '$3' : '$2'}`;
     const paginationValue = parseInt(query.p - 1) * parseInt(query.limit);
     queryParams.push(paginationValue);

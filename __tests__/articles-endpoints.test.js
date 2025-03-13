@@ -911,6 +911,31 @@ describe('GET /api/articles/:article_id/comments', () => {
           ]);
         });
     });
+    test('200: Responds with the last page of comments when the value passed to page is too high', () => {
+      return request(app)
+        .get('/api/articles/1/comments?limit=3&p=9999')
+        .expect(200)
+        .then(({ body: { comments } }) => {
+          expect(comments).toEqual([
+            {
+              comment_id: 4,
+              article_id: 1,
+              body: ' I carry a log — yes. Is it funny to you? It is not to me.',
+              votes: -100,
+              author: 'icellusedkars',
+              created_at: '2020-02-23T12:01:00.000Z',
+            },
+            {
+              comment_id: 9,
+              article_id: 1,
+              body: 'Superficially charming',
+              votes: 0,
+              author: 'icellusedkars',
+              created_at: '2020-01-01T03:08:00.000Z',
+            },
+          ]);
+        });
+    });
   });
 });
 

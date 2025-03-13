@@ -160,11 +160,14 @@ const updateArticleById = ({ inc_votes, article_id }) => {
 };
 
 const removeArticle = (articleId) => {
-  return db
-    .query(`DELETE FROM articles WHERE article_id = $1`, [articleId])
-    .then(() => {
-      return;
-    });
+  const promises = [checkExists('articles', 'article_id', articleId)];
+
+  const queryString = `DELETE FROM articles WHERE article_id = $1`;
+  promises.push(db.query(queryString, [articleId]));
+
+  return Promise.all(promises).then(() => {
+    return;
+  });
 };
 
 module.exports = {

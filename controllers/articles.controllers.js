@@ -1,3 +1,4 @@
+const { checkExists } = require('../db/seeds/utils');
 const {
   fetchArticleById,
   fetchArticles,

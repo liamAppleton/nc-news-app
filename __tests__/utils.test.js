@@ -3,6 +3,7 @@ const {
   createLookUp,
   formatDataWithId,
   checkExists,
+  countArticlesAfterFilter,
 } = require('../db/seeds/utils');
 const db = require('../db/connection.js');
 
@@ -390,6 +391,15 @@ describe('checkExists', () => {
     return checkExists('topics', 'slug', 'banana').catch((err) => {
       expect(err.status).toBe(404);
       expect(err.msg).toBe('resource not found');
+    });
+  });
+});
+
+describe('countArticlesAfterFilter', () => {
+  test('should resolve with the total number of articles after a filter has been applied', () => {
+    const query = { topic: 'mitch' };
+    return countArticlesAfterFilter(query).then((res) => {
+      expect(res).toBe(12);
     });
   });
 });

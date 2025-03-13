@@ -3,6 +3,7 @@ const format = require('pg-format');
 const {
   checkExists,
   countArticlesAfterFilter,
+  countCommentsByArticleId,
 } = require('../db/seeds/utils.js');
 
 const fetchArticleById = (articleId) => {
@@ -95,7 +96,8 @@ const addArticle = ({ author, title, body, topic, article_img_url }) => {
     });
 };
 
-const fetchCommentsByArticleId = ({ query, article_id }) => {
+const fetchCommentsByArticleId = async ({ query, article_id }) => {
+  const commentCount = await countCommentsByArticleId(article_id);
   const promises = [checkExists('articles', 'article_id', article_id)];
 
   const queryString = `SELECT comment_id, article_id, body, votes, author, created_at
@@ -103,8 +105,8 @@ const fetchCommentsByArticleId = ({ query, article_id }) => {
     ORDER BY created_at DESC `;
 
   let limit = `LIMIT $2`;
-  if (!query.limit) query.limit = '10';
-
+  if (!query.limit || query.limit === '' || query.limit > commentCount)
+    query.limit = '10';
   promises.push(db.query(queryString + limit, [article_id, query.limit]));
 
   return Promise.all(promises).then(([_, { rows }]) => {

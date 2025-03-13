@@ -731,6 +731,14 @@ describe('GET /api/articles/:article_id/comments', () => {
           expect(comments.length).toBe(10);
         });
     });
+    test('200: Comment limit will default to 10 when the value passed is greater than the number of comments returned', () => {
+      return request(app)
+        .get('/api/articles/1/comments?limit=9999')
+        .expect(200)
+        .then(({ body: { comments } }) => {
+          expect(comments.length).toBe(10);
+        });
+    });
   });
 });
 

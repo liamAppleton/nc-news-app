@@ -99,6 +99,14 @@ describe('GET /api/articles', () => {
           expect(articles.length).toBe(5);
         });
     });
+    test('When no value passed for limit the array of article objects will be defaulted to a length of 10', () => {
+      return request(app)
+        .get('/api/articles')
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles.length).toBe(10);
+        });
+    });
   });
 });
 

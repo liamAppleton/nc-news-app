@@ -36,8 +36,6 @@ const fetchArticles = async (query) => {
 
   const groupBy = `GROUP BY articles.article_id, articles.title, articles.topic, articles.created_at, articles.votes, articles.article_img_url `;
 
-  let limit = `LIMIT `;
-
   const queryFormatParams = [];
   const queryParams = [];
 
@@ -45,13 +43,6 @@ const fetchArticles = async (query) => {
     promises.push(checkExists('articles', 'topic', query.topic));
     queryString += `WHERE articles.topic = $1 `;
     queryParams.push(query.topic);
-  }
-
-  if (query.limit) {
-    limit += `${query.topic ? '$2 ' : '$1 '}`;
-    queryParams.push(query.limit);
-  } else {
-    limit += '10 ';
   }
 
   if (query['sort_by']) {
@@ -63,7 +54,21 @@ const fetchArticles = async (query) => {
     queryString += groupBy + 'ORDER BY articles.created_at DESC ';
   }
 
+  let limit = `LIMIT `;
+  if (query.limit) {
+    limit += `${query.topic ? '$2 ' : '$1 '}`;
+    queryParams.push(query.limit);
+  } else {
+    limit += '10 ';
+  }
+
+  if (query.p) {
+    limit += `OFFSET ${query.topic ? '$3' : '$2'}`;
+    const paginationValue = (query.p - 1) * query.limit;
+    queryParams.push(paginationValue);
+  }
   const formattedString = format(queryString + limit, queryFormatParams[0]);
+
   promises.unshift(db.query(formattedString, queryParams));
   return Promise.all(promises).then(([{ rows }]) => {
     return { total_count: totalCount, rows };

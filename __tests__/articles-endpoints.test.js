@@ -3,6 +3,7 @@ const app = require('../app.js');
 const db = require('../db/connection.js');
 const seed = require('../db/seeds/seed.js');
 const data = require('../db/data/test-data');
+const articles = require('../db/data/test-data/articles.js');
 
 beforeEach(() => seed(data));
 afterAll(() => db.end());
@@ -164,6 +165,96 @@ describe('GET /api/articles', () => {
         .then(({ body: { articles } }) => {
           expect(articles['total_count']).toBe(12);
         });
+    });
+    test('200: Responds with an array of article objects according to value passed for page', () => {
+      return request(app)
+        .get('/api/articles?limit=3&p=1')
+        .expect(200)
+        .then(
+          ({
+            body: {
+              articles: { rows },
+            },
+          }) => {
+            expect(rows).toEqual([
+              {
+                article_id: 3,
+                title: 'Eight pug gifs that remind me of mitch',
+                topic: 'mitch',
+                created_at: '2020-11-03T09:12:00.000Z',
+                votes: 0,
+                article_img_url:
+                  'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+                comment_count: '2',
+              },
+              {
+                article_id: 6,
+                title: 'A',
+                topic: 'mitch',
+                created_at: '2020-10-18T01:00:00.000Z',
+                votes: 0,
+                article_img_url:
+                  'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+                comment_count: '1',
+              },
+              {
+                article_id: 2,
+                title: 'Sony Vaio; or, The Laptop',
+                topic: 'mitch',
+                created_at: '2020-10-16T05:03:00.000Z',
+                votes: 0,
+                article_img_url:
+                  'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+                comment_count: '0',
+              },
+            ]);
+          }
+        );
+    });
+    test('Responds with page 2 of article objects when passed "2" for page', () => {
+      return request(app)
+        .get('/api/articles?limit=3&p=2')
+        .expect(200)
+        .then(
+          ({
+            body: {
+              articles: { rows },
+            },
+          }) => {
+            expect(rows).toEqual([
+              {
+                article_id: 13,
+                title: 'Another article about Mitch',
+                topic: 'mitch',
+                created_at: '2020-10-11T11:24:00.000Z',
+                votes: 0,
+                article_img_url:
+                  'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+                comment_count: '0',
+              },
+              {
+                article_id: 12,
+                title: 'Moustache',
+                topic: 'mitch',
+                created_at: '2020-10-11T11:24:00.000Z',
+                votes: 0,
+                article_img_url:
+                  'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+                comment_count: '0',
+              },
+              {
+                article_id: 5,
+                title: 'UNCOVERED: catspiracy to bring down democracy',
+                topic: 'cats',
+                created_at: '2020-08-03T13:14:00.000Z',
+                votes: 0,
+                article_img_url:
+                  'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+                comment_count: '2',
+              },
+            ]);
+          }
+        );
     });
   });
 });

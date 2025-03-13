@@ -940,7 +940,16 @@ describe('GET /api/articles/:article_id/comments', () => {
     describe('error handling: pagination', () => {
       test('400: Responds with "bad request" when passed an invalid limit value', () => {
         return request(app)
-          .get('/api/articles/1/comments?limit=banana')
+          .get('/api/articles/1/comments?limit=banana&p=2')
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.status).toBe(400);
+            expect(body.msg).toBe('bad request');
+          });
+      });
+      test('400: Responds with "bad request" when passed an invalid page value', () => {
+        return request(app)
+          .get('/api/articles/1/comments?limit=9&p=banana')
           .expect(400)
           .then(({ body }) => {
             expect(body.status).toBe(400);

@@ -54,9 +54,8 @@ exports.countArticlesAfterFilter = (query) => {
   });
 };
 
-exports.countCommentsById = (articleId) => {
+exports.countCommentsByArticleId = (articleId) => {
   const promises = [this.checkExists('articles', 'article_id', articleId)];
-
   const queryString = `SELECT COUNT(*) FROM comments WHERE article_id = $1`;
   promises.push(db.query(queryString, [articleId]));
 

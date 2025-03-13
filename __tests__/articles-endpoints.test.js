@@ -154,7 +154,15 @@ describe('GET /api/articles', () => {
         .get('/api/articles?limit=5')
         .expect(200)
         .then(({ body: { articles } }) => {
-          expect(articles['total_count']).toBe('13');
+          expect(articles['total_count']).toBe(13);
+        });
+    });
+    test('total_count property will be the number of articles after a filter is applied', () => {
+      return request(app)
+        .get('/api/articles?topic=mitch&limit=5')
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles['total_count']).toBe(12);
         });
     });
   });

@@ -1,6 +1,9 @@
 const db = require('../db/connection.js');
 const format = require('pg-format');
-const { checkExists } = require('../db/seeds/utils.js');
+const {
+  checkExists,
+  countArticlesAfterFilter,
+} = require('../db/seeds/utils.js');
 
 const fetchArticleById = (articleId) => {
   return db
@@ -22,8 +25,7 @@ const fetchArticleById = (articleId) => {
 };
 
 const fetchArticles = async (query) => {
-  const { rows } = await db.query(`SELECT COUNT (*) FROM articles`);
-  const totalCount = rows[0].count;
+  const totalCount = await countArticlesAfterFilter(query);
 
   const promises = [];
 

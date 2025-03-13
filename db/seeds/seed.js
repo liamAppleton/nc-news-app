@@ -95,7 +95,7 @@ const createComments = (commentData, articleData) => {
   return db
     .query(
       `CREATE TABLE comments
-    (comment_id SERIAL PRIMARY KEY, article_id INT REFERENCES articles(article_id) NOT NULL, body TEXT NOT NULL,
+    (comment_id SERIAL PRIMARY KEY, article_id INT REFERENCES articles(article_id) ON DELETE CASCADE NOT NULL, body TEXT NOT NULL,
     votes INT DEFAULT 0, author VARCHAR REFERENCES users(username), created_at TIMESTAMP NOT NULL)`
     )
     .then(() => {

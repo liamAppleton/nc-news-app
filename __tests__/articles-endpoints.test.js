@@ -1037,4 +1037,13 @@ describe('DELETE /api/articles/:article_id', () => {
   test('204: Responds with 204 status code', () => {
     return request(app).delete('/api/articles/1').expect(204);
   });
+  test('400: Responds with "bad request" when passed an invalid article id', () => {
+    return request(app)
+      .delete('/api/articles/banana')
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.status).toBe(400);
+        expect(body.msg).toBe('bad request');
+      });
+  });
 });

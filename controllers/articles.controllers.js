@@ -79,9 +79,13 @@ const patchArticleById = (req, res, next) => {
 
 const deleteArticle = (req, res, next) => {
   const { article_id } = req.params;
-  removeArticle(article_id).then(() => {
-    res.status(204).send();
-  });
+  removeArticle(article_id)
+    .then(() => {
+      res.status(204).send();
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
 
 module.exports = {

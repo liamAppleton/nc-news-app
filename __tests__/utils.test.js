@@ -4,6 +4,7 @@ const {
   formatDataWithId,
   checkExists,
   countArticlesAfterFilter,
+  countCommentsById,
 } = require('../db/seeds/utils');
 const db = require('../db/connection.js');
 
@@ -422,6 +423,14 @@ describe('countArticlesAfterFilter', () => {
     return countArticlesAfterFilter(query).catch((err) => {
       expect(err.status).toBe(404);
       expect(err.msg).toBe('resource not found');
+    });
+  });
+});
+
+describe('countCommentsById', () => {
+  test('should respond with the total number of comments for a given article', () => {
+    return countCommentsById(1).then((res) => {
+      expect(res).toBe(11);
     });
   });
 });

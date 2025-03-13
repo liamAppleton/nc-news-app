@@ -396,10 +396,17 @@ describe('checkExists', () => {
 });
 
 describe('countArticlesAfterFilter', () => {
-  test('should resolve with the total number of articles after a filter has been applied', () => {
+  test('should resolve with the total number of articles after a topic filter has been applied', () => {
     const query = { topic: 'mitch' };
     return countArticlesAfterFilter(query).then((res) => {
       expect(res).toBe(12);
+    });
+  });
+  test('404: Responds with resource not found when passed a topic that does not exist', () => {
+    const query = { topic: 'banana' };
+    return countArticlesAfterFilter(query).catch((err) => {
+      expect(err.status).toBe(404);
+      expect(err.msg).toBe('resource not found');
     });
   });
 });

@@ -3,7 +3,6 @@ const app = require('../app.js');
 const db = require('../db/connection.js');
 const seed = require('../db/seeds/seed.js');
 const data = require('../db/data/test-data');
-const articles = require('../db/data/test-data/articles.js');
 
 beforeEach(() => seed(data));
 afterAll(() => db.end());
@@ -136,7 +135,7 @@ describe('GET /api/articles', () => {
           }
         );
     });
-    test('When no value passed for limit the array of article objects will default to a length of 10', () => {
+    test('When no value passed for limit the array of article objects will default to a length of 10 (or less)', () => {
       return request(app)
         .get('/api/articles')
         .expect(200)
@@ -722,6 +721,14 @@ describe('GET /api/articles/:article_id/comments', () => {
         .expect(200)
         .then(({ body: { comments } }) => {
           expect(comments.length).toBe(5);
+        });
+    });
+    test('When no value passed for limit the array of comment objects will default to a length of 10 (or less)', () => {
+      return request(app)
+        .get('/api/articles/1/comments')
+        .expect(200)
+        .then(({ body: { comments } }) => {
+          expect(comments.length).toBe(10);
         });
     });
   });

@@ -402,7 +402,7 @@ describe('countArticlesAfterFilter', () => {
       expect(res).toBe(12);
     });
   });
-  test('404: Responds with resource not found when passed a topic that does not exist', () => {
+  test('404: Responds with "resource not found" when passed a topic that does not exist', () => {
     const query = { topic: 'banana' };
     return countArticlesAfterFilter(query).catch((err) => {
       expect(err.status).toBe(404);

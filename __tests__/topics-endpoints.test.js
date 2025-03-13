@@ -56,6 +56,7 @@ describe('POST /api/topics', () => {
     return request(app)
       .post('/api/topics')
       .send(newTopic)
+      .expect(400)
       .then(({ body }) => {
         expect(body.status).toBe(400);
         expect(body.msg).toBe('bad request');
@@ -66,6 +67,7 @@ describe('POST /api/topics', () => {
     return request(app)
       .post('/api/topics')
       .send(newTopic)
+      .expect(400)
       .then(({ body }) => {
         expect(body.status).toBe(400);
         expect(body.msg).toBe('bad request');

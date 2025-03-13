@@ -54,19 +54,18 @@ const fetchArticles = async (query) => {
     queryString += groupBy + 'ORDER BY articles.created_at DESC ';
   }
 
-  let limit = `LIMIT `;
-  if (query.limit) {
-    limit += `${query.topic ? '$2 ' : '$1 '}`;
-    queryParams.push(query.limit);
-  } else {
-    limit += '10 ';
+  let limit = `LIMIT ${query.topic ? '$2 ' : '$1 '}`;
+  if (!query.limit) {
+    query.limit = 10;
   }
+  queryParams.push(query.limit);
 
   if (query.p) {
     limit += `OFFSET ${query.topic ? '$3' : '$2'}`;
     const paginationValue = (query.p - 1) * query.limit;
     queryParams.push(paginationValue);
   }
+
   const formattedString = format(queryString + limit, queryFormatParams[0]);
 
   promises.unshift(db.query(formattedString, queryParams));

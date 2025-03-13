@@ -936,6 +936,18 @@ describe('GET /api/articles/:article_id/comments', () => {
           ]);
         });
     });
+
+    describe('error handling: pagination', () => {
+      test('400: Responds with "bad request" when passed an invalid limit value', () => {
+        return request(app)
+          .get('/api/articles/1/comments?limit=banana')
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.status).toBe(400);
+            expect(body.msg).toBe('bad request');
+          });
+      });
+    });
   });
 });
 

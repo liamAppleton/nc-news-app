@@ -12,24 +12,30 @@ describe('GET /api/articles', () => {
     return request(app)
       .get('/api/articles')
       .expect(200)
-      .then(({ body: { articles } }) => {
-        expect(articles).toBeSortedBy('created_at', { descending: true });
-        expect(articles.length).not.toBe(0);
+      .then(
+        ({
+          body: {
+            articles: { rows },
+          },
+        }) => {
+          expect(rows).toBeSortedBy('created_at', { descending: true });
+          expect(rows.length).not.toBe(0);
 
-        articles.forEach((article) => {
-          expect(article).toEqual(
-            expect.objectContaining({
-              article_id: expect.any(Number),
-              title: expect.any(String),
-              topic: expect.any(String),
-              created_at: expect.any(String),
-              votes: expect.any(Number),
-              article_img_url: expect.any(String),
-              comment_count: expect.any(String),
-            })
-          );
-        });
-      });
+          rows.forEach((article) => {
+            expect(article).toEqual(
+              expect.objectContaining({
+                article_id: expect.any(Number),
+                title: expect.any(String),
+                topic: expect.any(String),
+                created_at: expect.any(String),
+                votes: expect.any(Number),
+                article_img_url: expect.any(String),
+                comment_count: expect.any(String),
+              })
+            );
+          });
+        }
+      );
   });
 
   describe('queries', () => {
@@ -37,35 +43,59 @@ describe('GET /api/articles', () => {
       return request(app)
         .get('/api/articles?sort_by=title')
         .expect(200)
-        .then(({ body: { articles } }) => {
-          expect(articles).toBeSortedBy('title');
-        });
+        .then(
+          ({
+            body: {
+              articles: { rows },
+            },
+          }) => {
+            expect(rows).toBeSortedBy('title');
+          }
+        );
     });
     test('200: Responds with an array of article objects sorted in ascending order', () => {
       return request(app)
         .get('/api/articles?order=asc')
         .expect(200)
-        .then(({ body: { articles } }) => {
-          expect(articles).toBeSortedBy('created_at', { descending: false });
-        });
+        .then(
+          ({
+            body: {
+              articles: { rows },
+            },
+          }) => {
+            expect(rows).toBeSortedBy('created_at', { descending: false });
+          }
+        );
     });
     test('200: Articles should be sorted in descending order by default', () => {
       return request(app)
         .get('/api/articles?order')
         .expect(200)
-        .then(({ body: { articles } }) => {
-          expect(articles).toBeSortedBy('created_at', { descending: true });
-        });
+        .then(
+          ({
+            body: {
+              articles: { rows },
+            },
+          }) => {
+            expect(rows).toBeSortedBy('created_at', { descending: true });
+          }
+        );
     });
     test('200: Responds with an array of article objects filtered by the passed topic', () => {
       return request(app)
         .get('/api/articles?topic=mitch')
         .expect(200)
-        .then(({ body: { articles } }) => {
-          articles.forEach((article) => {
-            expect(article.topic).toBe('mitch');
-          });
-        });
+        .then(
+          ({
+            body: {
+              articles: { rows },
+            },
+          }) => {
+            rows.forEach((article) => {
+              expect(article.topic).toBe('mitch');
+            });
+          }
+        );
     });
 
     describe('error handling: queries', () => {
@@ -95,16 +125,36 @@ describe('GET /api/articles', () => {
       return request(app)
         .get('/api/articles?limit=5')
         .expect(200)
-        .then(({ body: { articles } }) => {
-          expect(articles.length).toBe(5);
-        });
+        .then(
+          ({
+            body: {
+              articles: { rows },
+            },
+          }) => {
+            expect(rows.length).toBe(5);
+          }
+        );
     });
-    test('When no value passed for limit the array of article objects will be defaulted to a length of 10', () => {
+    test('When no value passed for limit the array of article objects will default to a length of 10', () => {
       return request(app)
         .get('/api/articles')
         .expect(200)
+        .then(
+          ({
+            body: {
+              articles: { rows },
+            },
+          }) => {
+            expect(rows.length).toBe(10);
+          }
+        );
+    });
+    test('200: Responds with an object including the articles and a total_count property', () => {
+      return request(app)
+        .get('/api/articles?limit=5')
+        .expect(200)
         .then(({ body: { articles } }) => {
-          expect(articles.length).toBe(10);
+          expect(articles['total_count']).toBe('13');
         });
     });
   });

@@ -21,7 +21,10 @@ const fetchArticleById = (articleId) => {
     });
 };
 
-const fetchArticles = (query) => {
+const fetchArticles = async (query) => {
+  const { rows } = await db.query(`SELECT COUNT (*) FROM articles`);
+  const totalCount = rows[0].count;
+
   const promises = [];
 
   let queryString = `SELECT articles.article_id, articles.title, articles.topic, articles.created_at,
@@ -30,6 +33,7 @@ const fetchArticles = (query) => {
        ON articles.article_id = comments.article_id `;
 
   const groupBy = `GROUP BY articles.article_id, articles.title, articles.topic, articles.created_at, articles.votes, articles.article_img_url `;
+
   let limit = `LIMIT `;
 
   const queryFormatParams = [];
@@ -60,7 +64,7 @@ const fetchArticles = (query) => {
   const formattedString = format(queryString + limit, queryFormatParams[0]);
   promises.unshift(db.query(formattedString, queryParams));
   return Promise.all(promises).then(([{ rows }]) => {
-    return rows;
+    return { total_count: totalCount, rows };
   });
 };
 

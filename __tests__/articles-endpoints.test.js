@@ -772,6 +772,39 @@ describe('GET /api/articles/:article_id/comments', () => {
           ]);
         });
     });
+    test('200: Responds with correct page of comments', () => {
+      return request(app)
+        .get('/api/articles/1/comments?limit=3&p=2')
+        .expect(200)
+        .then(({ body: { comments } }) => {
+          expect(comments).toEqual([
+            {
+              comment_id: 13,
+              article_id: 1,
+              body: 'Fruit pastilles',
+              votes: 0,
+              author: 'icellusedkars',
+              created_at: '2020-06-15T10:25:00.000Z',
+            },
+            {
+              comment_id: 7,
+              article_id: 1,
+              body: 'Lobster pot',
+              votes: 0,
+              author: 'icellusedkars',
+              created_at: '2020-05-15T20:19:00.000Z',
+            },
+            {
+              comment_id: 8,
+              article_id: 1,
+              body: 'Delicious crackerbreads',
+              votes: 0,
+              author: 'icellusedkars',
+              created_at: '2020-04-14T20:19:00.000Z',
+            },
+          ]);
+        });
+    });
   });
 });
 

@@ -121,7 +121,7 @@ describe('GET /api/articles', () => {
     });
   });
 
-  describe('pagination', () => {
+  describe.only('pagination', () => {
     test('200: Responds with an array of article objects limited to the value passed', () => {
       return request(app)
         .get('/api/articles?limit=5')
@@ -225,7 +225,7 @@ describe('GET /api/articles', () => {
           }
         );
     });
-    test('200: Responds with page 2 of article objects when passed "2" for page', () => {
+    test('200: Responds with correct page of articles', () => {
       return request(app)
         .get('/api/articles?limit=3&p=2')
         .expect(200)

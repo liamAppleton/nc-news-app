@@ -35,3 +35,21 @@ exports.checkExists = (table, column, value) => {
     return true;
   });
 };
+
+exports.countArticlesAfterFilter = (query) => {
+  const promises = [];
+  let queryString = `SELECT * FROM articles `;
+  const queryParams = [];
+
+  if (query.topic) {
+    promises.push(this.checkExists('articles', 'topic', query.topic));
+    queryString += `WHERE topic = $1 `;
+    queryParams.push(query.topic);
+  }
+
+  promises.unshift(db.query(queryString, queryParams));
+
+  return Promise.all(promises).then(([{ rows }, _]) => {
+    return rows.length;
+  });
+};

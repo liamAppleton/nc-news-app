@@ -1,6 +1,9 @@
 const db = require('../db/connection.js');
 const format = require('pg-format');
-const { checkExists } = require('../db/seeds/utils.js');
+const {
+  checkExists,
+  countArticlesAfterFilter,
+} = require('../db/seeds/utils.js');
 
 const fetchArticleById = (articleId) => {
   return db
@@ -21,7 +24,9 @@ const fetchArticleById = (articleId) => {
     });
 };
 
-const fetchArticles = (query) => {
+const fetchArticles = async (query) => {
+  const totalCount = await countArticlesAfterFilter(query);
+
   const promises = [];
 
   let queryString = `SELECT articles.article_id, articles.title, articles.topic, articles.created_at,
@@ -30,6 +35,7 @@ const fetchArticles = (query) => {
        ON articles.article_id = comments.article_id `;
 
   const groupBy = `GROUP BY articles.article_id, articles.title, articles.topic, articles.created_at, articles.votes, articles.article_img_url `;
+
   const queryFormatParams = [];
   const queryParams = [];
 
@@ -43,15 +49,31 @@ const fetchArticles = (query) => {
     queryString += groupBy + `ORDER BY articles.%I `;
     queryFormatParams.push(query['sort_by']);
   } else if (query.order === 'asc') {
-    queryString += groupBy + `ORDER BY articles.created_at ASC`;
+    queryString += groupBy + `ORDER BY articles.created_at ASC `;
   } else {
-    queryString += groupBy + 'ORDER BY articles.created_at DESC';
+    queryString += groupBy + 'ORDER BY articles.created_at DESC ';
   }
 
-  const formattedString = format(queryString, queryFormatParams[0]);
+  let limit = `LIMIT ${query.topic ? '$2 ' : '$1 '}`;
+  if (!query.limit || query.limit === '' || query.limit > totalCount) {
+    query.limit = 10;
+  }
+  queryParams.push(query.limit);
+
+  if (query.p) {
+    const totalPages = Math.ceil(totalCount / query.limit);
+    query.p = query.p > totalPages ? totalPages : query.p;
+
+    limit += `OFFSET ${query.topic ? '$3' : '$2'}`;
+    const paginationValue = parseInt(query.p - 1) * parseInt(query.limit);
+    queryParams.push(paginationValue);
+  }
+
+  const formattedString = format(queryString + limit, queryFormatParams[0]);
+
   promises.unshift(db.query(formattedString, queryParams));
   return Promise.all(promises).then(([{ rows }]) => {
-    return rows;
+    return { total_count: totalCount, rows };
   });
 };
 

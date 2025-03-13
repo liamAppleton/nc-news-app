@@ -3,6 +3,7 @@ const {
   createLookUp,
   formatDataWithId,
   checkExists,
+  countArticlesAfterFilter,
 } = require('../db/seeds/utils');
 const db = require('../db/connection.js');
 
@@ -388,6 +389,37 @@ describe('checkExists', () => {
   });
   test('should reject with error object if resource does not exist', () => {
     return checkExists('topics', 'slug', 'banana').catch((err) => {
+      expect(err.status).toBe(404);
+      expect(err.msg).toBe('resource not found');
+    });
+  });
+});
+
+describe('countArticlesAfterFilter', () => {
+  let query;
+  beforeEach(() => {
+    query = { topic: 'mitch' };
+  });
+  test('should resolve with the total number of articles after a topic filter has been applied', () => {
+    return countArticlesAfterFilter(query).then((res) => {
+      expect(res).toBe(12);
+    });
+  });
+  test('should ignore "limit" in query', () => {
+    query.limit = 5;
+    return countArticlesAfterFilter(query).then((res) => {
+      expect(res).toBe(12);
+    });
+  });
+  test('should not mutate query object', () => {
+    const queryCopy = { topic: 'mitch' };
+    return countArticlesAfterFilter(query).then((res) => {
+      expect(query).toEqual(queryCopy);
+    });
+  });
+  test('404: Responds with "resource not found" when passed a topic that does not exist', () => {
+    query.topic = 'banana';
+    return countArticlesAfterFilter(query).catch((err) => {
       expect(err.status).toBe(404);
       expect(err.msg).toBe('resource not found');
     });

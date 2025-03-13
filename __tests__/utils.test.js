@@ -4,6 +4,7 @@ const {
   formatDataWithId,
   checkExists,
   countArticlesAfterFilter,
+  countCommentsByArticleId,
 } = require('../db/seeds/utils');
 const db = require('../db/connection.js');
 
@@ -420,6 +421,20 @@ describe('countArticlesAfterFilter', () => {
   test('404: Responds with "resource not found" when passed a topic that does not exist', () => {
     query.topic = 'banana';
     return countArticlesAfterFilter(query).catch((err) => {
+      expect(err.status).toBe(404);
+      expect(err.msg).toBe('resource not found');
+    });
+  });
+});
+
+describe('countCommentsByArticleId', () => {
+  test('should respond with the total number of comments for a given article', () => {
+    return countCommentsByArticleId(1).then((res) => {
+      expect(res).toBe(11);
+    });
+  });
+  test('404: Responds with "resource not found" when passed an article that does not exist', () => {
+    return countCommentsByArticleId(99999).catch((err) => {
       expect(err.status).toBe(404);
       expect(err.msg).toBe('resource not found');
     });

@@ -38,7 +38,7 @@ exports.checkExists = (table, column, value) => {
 
 exports.countArticlesAfterFilter = (query) => {
   const promises = [];
-  let queryString = `SELECT * FROM articles `;
+  let queryString = `SELECT COUNT(*) FROM articles `;
   const queryParams = [];
 
   if (query.topic) {
@@ -50,6 +50,16 @@ exports.countArticlesAfterFilter = (query) => {
   promises.unshift(db.query(queryString, queryParams));
 
   return Promise.all(promises).then(([{ rows }, _]) => {
-    return rows.length;
+    return parseInt(rows[0].count);
+  });
+};
+
+exports.countCommentsByArticleId = (articleId) => {
+  const promises = [this.checkExists('articles', 'article_id', articleId)];
+  const queryString = `SELECT COUNT(*) FROM comments WHERE article_id = $1`;
+  promises.push(db.query(queryString, [articleId]));
+
+  return Promise.all(promises).then(([_, { rows }]) => {
+    return parseInt(rows[0].count);
   });
 };

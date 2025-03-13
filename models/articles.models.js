@@ -3,6 +3,7 @@ const format = require('pg-format');
 const {
   checkExists,
   countArticlesAfterFilter,
+  countCommentsByArticleId,
 } = require('../db/seeds/utils.js');
 
 const fetchArticleById = (articleId) => {
@@ -95,14 +96,30 @@ const addArticle = ({ author, title, body, topic, article_img_url }) => {
     });
 };
 
-const fetchCommentsByArticleId = (articleId) => {
-  const promises = [checkExists('articles', 'article_id', articleId)];
+const fetchCommentsByArticleId = async ({ query, article_id }) => {
+  const commentCount = await countCommentsByArticleId(article_id);
+  const promises = [checkExists('articles', 'article_id', article_id)];
 
   const queryString = `SELECT comment_id, article_id, body, votes, author, created_at
     FROM comments WHERE article_id = $1
-    ORDER BY created_at DESC`;
+    ORDER BY created_at DESC `;
+  const queryParams = [article_id];
 
-  promises.push(db.query(queryString, [articleId]));
+  let limit = `LIMIT $2 `;
+  if (!query.limit || query.limit === '' || query.limit > commentCount) {
+    query.limit = '10';
+  }
+  queryParams.push(query.limit);
+
+  if (query.p) {
+    const totalPages = Math.ceil(commentCount / query.limit);
+    query.p = query.p > totalPages ? totalPages : query.p;
+
+    limit += `OFFSET $3`;
+    const paginationValue = parseInt(query.p - 1) * parseInt(query.limit);
+    queryParams.push(paginationValue);
+  }
+  promises.push(db.query(queryString + limit, queryParams));
 
   return Promise.all(promises).then(([_, { rows }]) => {
     return rows;

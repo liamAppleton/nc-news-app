@@ -55,7 +55,7 @@ const fetchArticles = async (query) => {
   }
 
   let limit = `LIMIT ${query.topic ? '$2 ' : '$1 '}`;
-  if (!query.limit) {
+  if (!query.limit || query.limit === '') {
     query.limit = 10;
   }
   queryParams.push(query.limit);

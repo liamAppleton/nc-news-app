@@ -396,6 +396,22 @@ describe('GET /api/articles', () => {
           }
         );
     });
+
+    describe('error handling: pagination', () => {
+      // invalid limit
+      // invalid page
+      // limit greater than page etc.. workout calculations?
+
+      test('400: Responds with "bad request" when passed an invalid limit value', () => {
+        return request(app)
+          .get('/api/articles?limit=banana')
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.status).toBe(400);
+            expect(body.msg).toBe('bad request');
+          });
+      });
+    });
   });
 });
 

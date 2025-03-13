@@ -26,3 +26,29 @@ describe('GET /api/topics', () => {
       });
   });
 });
+
+describe('POST /api/topics', () => {
+  let newTopic;
+  beforeEach(() => {
+    newTopic = {
+      slug: 'test topic name',
+      description: 'test description',
+    };
+  });
+
+  test('201: Responds with the posted topic', () => {
+    return request(app)
+      .post('/api/topics')
+      .send(newTopic)
+      .expect(201)
+      .then(({ body: { topic } }) => {
+        expect(topic).toEqual(
+          expect.objectContaining({
+            slug: 'test topic name',
+            description: 'test description',
+            img_url: null,
+          })
+        );
+      });
+  });
+});

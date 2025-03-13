@@ -51,4 +51,14 @@ describe('POST /api/topics', () => {
         );
       });
   });
+  test('400: Responds with "bad request" when slug is not provided', () => {
+    delete newTopic.slug;
+    return request(app)
+      .post('/api/topics')
+      .send(newTopic)
+      .then(({ body }) => {
+        expect(body.status).toBe(400);
+        expect(body.msg).toBe('bad request');
+      });
+  });
 });

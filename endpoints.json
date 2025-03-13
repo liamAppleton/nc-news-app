@@ -44,6 +44,7 @@
   },
   "GET /api/articles/:article_id": {
     "description": "serves an article object with requested article id",
+    "queries": ["limit", "p"],
     "exampleResponse": {
       "title": "Seafood substitutions are increasing",
       "topic": "cooking",

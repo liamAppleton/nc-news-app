@@ -16,12 +16,12 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v3
         with: 
-          node-version: 18
+          node-version: 23
 
       - name: Use PostgreSQL
         uses: harmon758/postgresql-action@v1
         with:
-          postgresql db: 'nc_news_test'
+          postgresql db: 'my_db'
           postgresql user: 'test_user'
           postgresql password: 'test_password'
 
@@ -29,7 +29,7 @@ jobs:
         run: npm ci
 
       - name: Run tests
-        run: PGDATABASE=nc_news_test PGUSER=test_user PGPASSWORD=test_password npm t
+        run: PGDATABASE=my_db PGUSER=test_user PGPASSWORD=test_password npm t
 
   build:
     runs-on: ubuntu-latest

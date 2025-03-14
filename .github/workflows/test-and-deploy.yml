@@ -12,6 +12,9 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
+      
+      - name: Setup Environment Variables
+        run: echo "PGDATABASE=nc_news_test" >> $GITHUB_ENV
 
       - name: Use Node.js
         uses: actions/setup-node@v3
@@ -21,7 +24,7 @@ jobs:
       - name: Use PostgreSQL
         uses: harmon758/postgresql-action@v1
         with:
-          postgresql db: 'my_db'
+          postgresql db: 'nc_news_test'
           postgresql user: 'test_user'
           postgresql password: 'test_password'
 
@@ -35,7 +38,7 @@ jobs:
         run: npm ci
 
       - name: Run tests
-        run: PGDATABASE=my_db PGUSER=test_user PGPASSWORD=test_password npm t
+        run: PGDATABASE=nc_news_test PGUSER=test_user PGPASSWORD=test_password npm t
 
   build:
     runs-on: ubuntu-latest

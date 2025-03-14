@@ -25,6 +25,12 @@ jobs:
           postgresql user: 'test_user'
           postgresql password: 'test_password'
 
+      - name: Setup Database
+        run: npm run setup-dbs
+
+      - name: Seed Database
+        run: npm run seed-dev
+
       - name: Install dependencies
         run: npm ci
 

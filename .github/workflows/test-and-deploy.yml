@@ -23,37 +23,27 @@ jobs:
           postgresql db: ${{ secrets.PGDATABASE }}
           postgresql user: ${{ secrets.PGUSER }}
           postgresql password: ${{ secrets.PGPASSWORD }}
-          postgresql port: 5433
 
       - name: Install dependencies
         run: npm ci
 
       - name: Wait for PostgreSQL to start
-        run: sleep 5s  # Add a delay to allow PostgreSQL to initialize
+        run: sleep 5s 
 
       - name: Setup Database
-        run: PGPASSWORD=${{ secrets.PGPASSWORD }} psql -h localhost -p 5433 -U ${{ secrets.PGUSER }} -d ${{ secrets.PGDATABASE }} -f ./db/setup-dbs.sql
         env:
           PGDATABASE: ${{ secrets.PGDATABASE }}
           PGUSER: ${{ secrets.PGUSER }}
           PGPASSWORD: ${{ secrets.PGPASSWORD }}
-          PGHOST: localhost
-          PGPORT: 5433
 
       - name: Seed Database
         run: npm run seed-dev
         env:
           PGDATABASE: ${{ secrets.PGDATABASE }}
           PGUSER: ${{ secrets.PGUSER }}
-          PGPASSWORD: ${{ secrets.PGPASSWORD }}
-          PGHOST: localhost
-          PGPORT: 5433
 
       - name: Run tests
         run: npm test
         env:
           PGDATABASE: ${{ secrets.PGDATABASE }}
           PGUSER: ${{ secrets.PGUSER }}
-          PGPASSWORD: ${{ secrets.PGPASSWORD }}
-          PGHOST: localhost
-          PGPORT: 5433

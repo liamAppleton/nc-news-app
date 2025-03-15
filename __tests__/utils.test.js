@@ -7,7 +7,10 @@ const {
   countCommentsByArticleId,
 } = require('../db/seeds/utils');
 const db = require('../db/connection.js');
+const seed = require('../db/seeds/seed.js');
+const data = require('../db/data/test-data/index.js');
 
+beforeEach(() => seed(data));
 afterAll(() => {
   db.end();
 });

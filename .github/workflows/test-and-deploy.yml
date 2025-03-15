@@ -8,6 +8,9 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      TZ: "Europe/London"
+
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
@@ -35,6 +38,7 @@ jobs:
           PGUSER: ${{ secrets.PGUSER }}
           PGPASSWORD: ${{ secrets.PGPASSWORD }}
       
+
       - name: Run Tests
         run: PGDATABASE=${{ secrets.PGDATABASE }} PGUSER=${{ secrets.PGUSER }} PGPASSWORD=${{ secrets.PGPASSWORD }} npm test
         env:

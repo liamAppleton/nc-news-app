@@ -13,6 +13,12 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
+      - name: Install PostgreSQL
+        run: sudo apt-get update && sudo apt-get install -y postgresql postgresql-contrib
+
+      - name: Start PostgreSQL Service
+        run: sudo systemctl start postgresql
+
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:

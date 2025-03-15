@@ -34,7 +34,7 @@ jobs:
       
       - name: Seed Database
         run: npm run seed-dev
-        end: 
+        env: 
           PGDATABASE: ${{ secrets.PGDATABASE }}
       
       - name: Run Tests

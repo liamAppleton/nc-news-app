@@ -2,7 +2,7 @@ name: Test & Deploy
 
 on:
   push:
-    branches: 
+    branches:
       - main
 
 jobs:
@@ -11,11 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Use Node.js
-        uses: actions/setup-node@v3
-        with: 
+        uses: actions/setup-node@v4
+        with:
           node-version: 23
 
       - name: Use PostgreSQL
@@ -26,7 +26,7 @@ jobs:
           postgresql password: 'test_password'
 
       - name: Install dependencies
-        run: npm ci --include=dev
+        run: npm ci
 
       - name: Run tests
         run: PGDATABASE=my_db PGUSER=test_user PGPASSWORD=test_password npm t
@@ -34,9 +34,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v3
-
       - name: Deploy to production
         uses: johnbeynon/render-deploy-action@v0.0.8
         with:

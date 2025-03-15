@@ -28,6 +28,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
       
+      - name: Run Tests - Articles
+        run: PGDATABASE=${{ secrets.PGDATABASE }} PGUSER=${{ secrets.PGUSER }} PGPASSWORD=${{ secrets.PGPASSWORD }} npm test __tests__/articles-endpoints.test.js
+        env:
+          PGDATABASE: ${{ secrets.PGDATABASE }}
+          PGUSER: ${{ secrets.PGUSER }}
+          PGPASSWORD: ${{ secrets.PGPASSWORD }}
+      
       - name: Run Tests
         run: PGDATABASE=${{ secrets.PGDATABASE }} PGUSER=${{ secrets.PGUSER }} PGPASSWORD=${{ secrets.PGPASSWORD }} npm test
         env:

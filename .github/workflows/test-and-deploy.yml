@@ -12,19 +12,24 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
-      - name: Install PostgreSQL
-        run: sudo apt-get update && sudo apt-get install -y postgresql postgresql-contrib
-
-      - name: Start PostgreSQL Service
-        run: sudo systemctl start postgresql
-
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 23
 
+      - name: Use PostgreSQL
+        uses: harmon758/postgresql-action@v1
+        with:
+          postgresql db: ${{ secrets.PGDATABASE }}
+          postgresql user: ${{ secrets.PGUSER }}
+          postgresql password: ${{ secrets.PGPASSWORD }}
+          postgresql port: 5433
+
       - name: Install dependencies
         run: npm ci
+
+      - name: Wait for PostgreSQL to start
+        run: sleep 5s  # Add a delay to allow PostgreSQL to initialize
 
       - name: Setup Database
         run: PGPASSWORD=${{ secrets.PGPASSWORD }} psql -h localhost -p 5433 -U ${{ secrets.PGUSER }} -d ${{ secrets.PGDATABASE }} -f ./db/setup-dbs.sql

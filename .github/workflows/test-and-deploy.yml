@@ -7,7 +7,6 @@ on:
 
 jobs:
   test:
-    name: Test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
@@ -24,22 +23,17 @@ jobs:
         with:
           node-version: 23
 
-      - name: Use PostgreSQL
-        uses: harmon758/postgresql-action@v1
-        with:
-          database: ${{ secrets.PGDATABASE }}
-          username: ${{ secrets.PGUSER }}
-          password: ${{ secrets.PGPASSWORD }}
-
       - name: Install dependencies
         run: npm ci
 
       - name: Setup Database
-        run: npm run setup-dbs
+        run: PGPASSWORD=${{ secrets.PGPASSWORD }} psql -h localhost -p 5433 -U ${{ secrets.PGUSER }} -d ${{ secrets.PGDATABASE }} -f ./db/setup-dbs.sql
         env:
           PGDATABASE: ${{ secrets.PGDATABASE }}
           PGUSER: ${{ secrets.PGUSER }}
           PGPASSWORD: ${{ secrets.PGPASSWORD }}
+          PGHOST: localhost
+          PGPORT: 5433
 
       - name: Seed Database
         run: npm run seed-dev
@@ -47,6 +41,8 @@ jobs:
           PGDATABASE: ${{ secrets.PGDATABASE }}
           PGUSER: ${{ secrets.PGUSER }}
           PGPASSWORD: ${{ secrets.PGPASSWORD }}
+          PGHOST: localhost
+          PGPORT: 5433
 
       - name: Run tests
         run: npm test
@@ -54,16 +50,5 @@ jobs:
           PGDATABASE: ${{ secrets.PGDATABASE }}
           PGUSER: ${{ secrets.PGUSER }}
           PGPASSWORD: ${{ secrets.PGPASSWORD }}
-
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v4
-
-      - name: Deploy to production
-        uses: johnbeynon/render-deploy-action@v0.0.8
-        with:
-          service-id: ${{ secrets.MY_RENDER_SERVICE_ID }}
-          api-key: ${{ secrets.MY_RENDER_API_KEY }}
-          wait-for-success: true
+          PGHOST: localhost
+          PGPORT: 5433

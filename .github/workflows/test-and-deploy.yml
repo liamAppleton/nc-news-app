@@ -26,6 +26,14 @@ jobs:
       
       - name: Install dependencies
         run: npm ci
+
+      - name: Install PostregSQL
+        uses: actions/checkout@v4
+        
+      - name: Setup PostgreSQL
+        uses: tj-actions/install-postgresql@v3
+        with:
+          postgresql-version: 17  
        
       - name: Setup Database
         run: npm run setup-dbs

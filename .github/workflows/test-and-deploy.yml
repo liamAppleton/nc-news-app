@@ -59,6 +59,20 @@ jobs:
           PGUSER: ${{ secrets.PGUSER }}
           PGPASSWORD: ${{ secrets.PGPASSWORD }}
 
+      - name: Run Tests - Articles By ID
+        run: PGDATABASE=${{ secrets.PGDATABASE }} PGUSER=${{ secrets.PGUSER }} PGPASSWORD=${{ secrets.PGPASSWORD }} npm test __tests__/articles-by-id-endpoints.test.js
+        env:
+          PGDATABASE: ${{ secrets.PGDATABASE }}
+          PGUSER: ${{ secrets.PGUSER }}
+          PGPASSWORD: ${{ secrets.PGPASSWORD }}
+
+      - name: Run Tests - Articles Comments By Article ID
+        run: PGDATABASE=${{ secrets.PGDATABASE }} PGUSER=${{ secrets.PGUSER }} PGPASSWORD=${{ secrets.PGPASSWORD }} npm test __tests__/articles-comments-by-article-id-endpoints.test.js
+        env:
+          PGDATABASE: ${{ secrets.PGDATABASE }}
+          PGUSER: ${{ secrets.PGUSER }}
+          PGPASSWORD: ${{ secrets.PGPASSWORD }}
+
       - name: Run Tests - Comments
         run: PGDATABASE=${{ secrets.PGDATABASE }} PGUSER=${{ secrets.PGUSER }} PGPASSWORD=${{ secrets.PGPASSWORD }} npm test __tests__/comments-endpoints.test.js
         env:

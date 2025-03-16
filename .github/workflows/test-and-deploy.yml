@@ -31,64 +31,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run Tests - Utils
-        run: PGDATABASE=${{ secrets.PGDATABASE }} PGUSER=${{ secrets.PGUSER }} PGPASSWORD=${{ secrets.PGPASSWORD }} npm test __tests__/utils.test.js
+      - name: Run Test Seed
+        run: PGDATABASE=${{ secrets.PGDATABASE }} PGUSER=${{ secrets.PGUSER }} PGPASSWORD=${{ secrets.PGPASSWORD }} npm run test-seed
         env:
           PGDATABASE: ${{ secrets.PGDATABASE }}
           PGUSER: ${{ secrets.PGUSER }}
           PGPASSWORD: ${{ secrets.PGPASSWORD }}
 
-      - name: Run Tests - Seed
-        run: PGDATABASE=${{ secrets.PGDATABASE }} PGUSER=${{ secrets.PGUSER }} PGPASSWORD=${{ secrets.PGPASSWORD }} npm test __tests__/seed.test.js
-        env:
-          PGDATABASE: ${{ secrets.PGDATABASE }}
-          PGUSER: ${{ secrets.PGUSER }}
-          PGPASSWORD: ${{ secrets.PGPASSWORD }}
-
-      - name: Run Tests - App
-        run: PGDATABASE=${{ secrets.PGDATABASE }} PGUSER=${{ secrets.PGUSER }} PGPASSWORD=${{ secrets.PGPASSWORD }} npm test __tests__/app.test.js
-        env:
-          PGDATABASE: ${{ secrets.PGDATABASE }}
-          PGUSER: ${{ secrets.PGUSER }}
-          PGPASSWORD: ${{ secrets.PGPASSWORD }}
-
-      - name: Run Tests - Articles
-        run: PGDATABASE=${{ secrets.PGDATABASE }} PGUSER=${{ secrets.PGUSER }} PGPASSWORD=${{ secrets.PGPASSWORD }} npm test __tests__/articles-endpoints.test.js
-        env:
-          PGDATABASE: ${{ secrets.PGDATABASE }}
-          PGUSER: ${{ secrets.PGUSER }}
-          PGPASSWORD: ${{ secrets.PGPASSWORD }}
-
-      - name: Run Tests - Articles By ID
-        run: PGDATABASE=${{ secrets.PGDATABASE }} PGUSER=${{ secrets.PGUSER }} PGPASSWORD=${{ secrets.PGPASSWORD }} npm test __tests__/articles-by-id-endpoints.test.js
-        env:
-          PGDATABASE: ${{ secrets.PGDATABASE }}
-          PGUSER: ${{ secrets.PGUSER }}
-          PGPASSWORD: ${{ secrets.PGPASSWORD }}
-
-      - name: Run Tests - Articles Comments By Article ID
-        run: PGDATABASE=${{ secrets.PGDATABASE }} PGUSER=${{ secrets.PGUSER }} PGPASSWORD=${{ secrets.PGPASSWORD }} npm test __tests__/articles-comments-by-article-id-endpoints.test.js
-        env:
-          PGDATABASE: ${{ secrets.PGDATABASE }}
-          PGUSER: ${{ secrets.PGUSER }}
-          PGPASSWORD: ${{ secrets.PGPASSWORD }}
-
-      - name: Run Tests - Comments
-        run: PGDATABASE=${{ secrets.PGDATABASE }} PGUSER=${{ secrets.PGUSER }} PGPASSWORD=${{ secrets.PGPASSWORD }} npm test __tests__/comments-endpoints.test.js
-        env:
-          PGDATABASE: ${{ secrets.PGDATABASE }}
-          PGUSER: ${{ secrets.PGUSER }}
-          PGPASSWORD: ${{ secrets.PGPASSWORD }}
-
-      - name: Run Tests - Topics
-        run: PGDATABASE=${{ secrets.PGDATABASE }} PGUSER=${{ secrets.PGUSER }} PGPASSWORD=${{ secrets.PGPASSWORD }} npm test __tests__/topics-endpoints.test.js
-        env:
-          PGDATABASE: ${{ secrets.PGDATABASE }}
-          PGUSER: ${{ secrets.PGUSER }}
-          PGPASSWORD: ${{ secrets.PGPASSWORD }}
-
-      - name: Run Tests - Users
-        run: PGDATABASE=${{ secrets.PGDATABASE }} PGUSER=${{ secrets.PGUSER }} PGPASSWORD=${{ secrets.PGPASSWORD }} npm test __tests__/users-endpoints.test.js
+      - name: Run Tests
+        run: PGDATABASE=${{ secrets.PGDATABASE }} PGUSER=${{ secrets.PGUSER }} PGPASSWORD=${{ secrets.PGPASSWORD }} npm t
         env:
           PGDATABASE: ${{ secrets.PGDATABASE }}
           PGUSER: ${{ secrets.PGUSER }}

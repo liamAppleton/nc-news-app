@@ -9,7 +9,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
     env:
-      TZ: 'Europe/London'
       PGDATABASE: ${{ secrets.PGDATABASE }}
       PGUSER: ${{ secrets.PGUSER }}
       PGPASSWORD: ${{ secrets.PGPASSWORD }}

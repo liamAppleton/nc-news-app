@@ -7,6 +7,9 @@ const {
   handleServerError,
 } = require('./error-handlers/error-handlers.controllers');
 const apiRouter = require('./routes/api-router.js');
+const cors = require('cors');
+
+app.use(cors());
 
 app.use(express.json());
 

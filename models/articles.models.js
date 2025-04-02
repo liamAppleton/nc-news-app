@@ -46,14 +46,24 @@ const fetchArticles = async (query) => {
     queryParams.push(query.topic);
   }
 
+  let orderBy;
   if (query['sort_by']) {
-    queryString += groupBy + `ORDER BY articles.%I `;
-    queryFormatParams.push(query['sort_by']);
-  } else if (query.order === 'asc') {
-    queryString += groupBy + `ORDER BY articles.created_at ASC `;
-  } else {
-    queryString += groupBy + 'ORDER BY articles.created_at DESC ';
+    if (query['sort_by'] === 'comment_count')
+      orderBy = `ORDER BY COUNT(comments.comment_id) `;
+    if (query['sort_by'] !== 'comment_count') {
+      orderBy = `ORDER BY articles.%I `;
+      queryFormatParams.push(query['sort_by']);
+    }
+    if (query.order === 'asc') orderBy += 'ASC ';
+    if (query.order === 'desc') orderBy += 'DESC ';
   }
+
+  if (!query['sort_by']) {
+    if (query.order === 'asc') orderBy = `ORDER BY articles.created_at ASC `;
+    else orderBy = 'ORDER BY articles.created_at DESC ';
+  }
+
+  queryString += groupBy + orderBy;
 
   let limit = `LIMIT ${query.topic ? '$2 ' : '$1 '}`;
   if (!query.limit || query.limit === '' || query.limit > totalCount) {
@@ -70,7 +80,10 @@ const fetchArticles = async (query) => {
     queryParams.push(paginationValue);
   }
 
-  const formattedString = format(queryString + limit, queryFormatParams[0]);
+  const formattedString =
+    queryFormatParams[0] !== undefined
+      ? format(queryString + limit, queryFormatParams[0])
+      : queryString + limit;
 
   promises.unshift(db.query(formattedString, queryParams));
   return Promise.all(promises).then(([{ rows }]) => {

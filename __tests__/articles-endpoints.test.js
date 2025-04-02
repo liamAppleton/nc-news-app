@@ -53,6 +53,20 @@ describe('GET /api/articles', () => {
           }
         );
     });
+    test('200: Responds with an array of article objects sorted by number of comments when passed comment_count', () => {
+      return request(app)
+        .get('/api/articles?sort_by=comment_count')
+        .expect(200)
+        .then(
+          ({
+            body: {
+              articles: { rows },
+            },
+          }) => {
+            expect(rows).toBeSortedBy('comment_count');
+          }
+        );
+    });
     test('200: Responds with an array of article objects sorted in ascending order', () => {
       return request(app)
         .get('/api/articles?order=asc')
@@ -64,6 +78,20 @@ describe('GET /api/articles', () => {
             },
           }) => {
             expect(rows).toBeSortedBy('created_at', { descending: false });
+          }
+        );
+    });
+    test('200: Responds with an array of article objects sorted by passed query param and in correct sorting direction as specified by order param', () => {
+      return request(app)
+        .get('/api/articles?sort_by=title&order=desc')
+        .expect(200)
+        .then(
+          ({
+            body: {
+              articles: { rows },
+            },
+          }) => {
+            expect(rows).toBeSortedBy('title', { descending: true });
           }
         );
     });

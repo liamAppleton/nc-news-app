@@ -11,9 +11,11 @@ const getCommentLike = (req, res, next) => {
 
 const postCommentLike = (req, res, next) => {
   const { body } = req;
-  addCommentLike(body).then((commentLike) => {
-    res.status(201).send({ commentLike });
-  });
+  addCommentLike(body)
+    .then((commentLike) => {
+      res.status(201).send({ commentLike });
+    })
+    .catch((err) => next(err));
 };
 
 module.exports = { getCommentLike, postCommentLike };

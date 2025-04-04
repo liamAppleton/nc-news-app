@@ -32,13 +32,31 @@ describe('GET /api/users/:username/:comment_id', () => {
           expect(body.msg).toBe('bad request');
         });
     });
-    test('404: Responds with "user not found" when passed a username that does not exist', () => {
+    test('404: Responds with "like not found" when passed a username that does not exist in comment_likes', () => {
       return request(app)
         .get('/api/users/banana/1')
         .expect(404)
         .then(({ body }) => {
           expect(body.status).toBe(404);
-          expect(body.msg).toBe('user not found');
+          expect(body.msg).toBe('like not found');
+        });
+    });
+    test('404: Responds with "like not found" when passed a comment_id that does not exist in comment_likes', () => {
+      return request(app)
+        .get('/api/users/butter_bridge/9999')
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.status).toBe(404);
+          expect(body.msg).toBe('like not found');
+        });
+    });
+    test('404: Responds with "like not found" when passed a comment_id and username that do not exist in comment_likes', () => {
+      return request(app)
+        .get('/api/users/lurker/10')
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.status).toBe(404);
+          expect(body.msg).toBe('like not found');
         });
     });
   });

@@ -12,7 +12,7 @@ const fetchCommentLike = (username, comment_id) => {
 
   return Promise.all(promises).then(([{ rows }]) => {
     if (rows.length === 0) {
-      return Promise.reject({ status: 404, msg: 'user not found' });
+      return Promise.reject({ status: 404, msg: 'like not found' });
     }
     return rows[0];
   });

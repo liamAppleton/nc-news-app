@@ -49,6 +49,9 @@ const updateCommentLike = ({ username, comment_id, liked }) => {
       [liked, username, comment_id]
     )
     .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({ status: 404, msg: 'resource not found' });
+      }
       return rows[0];
     });
 };

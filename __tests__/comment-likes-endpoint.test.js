@@ -173,7 +173,10 @@ describe('PATCH: /api/comment-likes/:username/:comment_id', () => {
   });
 });
 
-// PATCH:
-// 200 etc
-
-// DELETE
+describe('DELETE: /api/comment-likes/:username/:comment_id', () => {
+  test('204: Responds with 204 status code', () => {
+    return request(app)
+      .delete('/api/comment-likes/butter_bridge/2')
+      .expect(204);
+  });
+});

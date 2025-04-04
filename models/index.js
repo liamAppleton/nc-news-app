@@ -14,6 +14,7 @@ const {
   fetchCommentLike,
   addCommentLike,
   updateCommentLike,
+  removeCommentLike,
 } = require('./commentLike.models');
 
 module.exports = {
@@ -33,4 +34,5 @@ module.exports = {
   fetchCommentLike,
   addCommentLike,
   updateCommentLike,
+  removeCommentLike,
 };

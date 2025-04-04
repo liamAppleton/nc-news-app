@@ -38,7 +38,7 @@ const addCommentLike = ({ username, comment_id, liked }) => {
   });
 };
 
-const updateCommentLike = ({ username, comment_id, liked }) => {
+const updateCommentLike = (username, comment_id, liked) => {
   return db
     .query(
       `
@@ -56,4 +56,20 @@ const updateCommentLike = ({ username, comment_id, liked }) => {
     });
 };
 
-module.exports = { fetchCommentLike, addCommentLike, updateCommentLike };
+const removeCommentLike = ({ username, comment_id }) => {
+  return db
+    .query(
+      `DELETE FROM comment_likes WHERE username = $1 and comment_id = $2`,
+      [username, comment_id]
+    )
+    .then(() => {
+      return;
+    });
+};
+
+module.exports = {
+  fetchCommentLike,
+  addCommentLike,
+  updateCommentLike,
+  removeCommentLike,
+};

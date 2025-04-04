@@ -15,6 +15,7 @@ const {
   getCommentLike,
   postCommentLike,
   patchCommentLike,
+  deleteCommentLike,
 } = require('./commentLike.controllers');
 
 module.exports = {
@@ -35,4 +36,5 @@ module.exports = {
   getCommentLike,
   postCommentLike,
   patchCommentLike,
+  deleteCommentLike,
 };

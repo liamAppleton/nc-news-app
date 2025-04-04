@@ -134,7 +134,7 @@ describe('PATCH: /api/comment-likes/:username/:comment_id', () => {
   describe('error handling', () => {
     test('400: Responds with "bad request" when passed an invalid comment_id', () => {
       return request(app)
-        .patch('/api/comment-likes/lurker/banana')
+        .patch('/api/comment-likes/butter_bridge/banana')
         .send({ liked: false })
         .expect(400)
         .then(({ body }) => {
@@ -152,11 +152,10 @@ describe('PATCH: /api/comment-likes/:username/:comment_id', () => {
           expect(body.msg).toBe('resource not found');
         });
     });
-    test.skip('404: Responds with "resource not found" when passed a comment_id that does not exist', () => {
-      newLike['comment_id'] = 9999;
+    test('404: Responds with "resource not found" when passed a comment_id that does not exist', () => {
       return request(app)
-        .post('/api/comment-likes/lurker/9999')
-        .send(newLike)
+        .patch('/api/comment-likes/butter_bridge/9999')
+        .send({ liked: false })
         .expect(404)
         .then(({ body }) => {
           expect(body.status).toBe(404);

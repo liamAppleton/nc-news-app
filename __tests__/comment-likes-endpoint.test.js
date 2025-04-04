@@ -32,6 +32,15 @@ describe('GET /api/users/:username/:comment_id', () => {
           expect(body.msg).toBe('bad request');
         });
     });
+    test('404: Responds with "user not found" when passed a username that does not exist', () => {
+      return request(app)
+        .get('/api/users/banana/1')
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.status).toBe(404);
+          expect(body.msg).toBe('user not found');
+        });
+    });
   });
 });
 

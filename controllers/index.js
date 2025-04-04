@@ -14,6 +14,7 @@ const { getUsers, getUserByUsername } = require('./users.controllers');
 const {
   getCommentLike,
   postCommentLike,
+  patchCommentLike,
 } = require('./commentLike.controllers');
 
 module.exports = {
@@ -33,4 +34,5 @@ module.exports = {
   getUserByUsername,
   getCommentLike,
   postCommentLike,
+  patchCommentLike,
 };

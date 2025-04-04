@@ -116,8 +116,22 @@ describe('POST /api/comment-likes/:username/:comment_id', () => {
     });
   });
 });
-// POST:
-//, 404 user not found, 404 comment not found, 404 like not found,
+
+describe('PATCH: /api/comment-likes/:username/:comment_id', () => {
+  test('200: Responds with the updated comment-like object', () => {
+    return request(app)
+      .patch('/api/comment-likes/butter_bridge/1')
+      .send({ liked: false })
+      .expect(200)
+      .then(({ body: { commentLike } }) => {
+        expect(commentLike).toEqual({
+          username: 'butter_bridge',
+          comment_id: 1,
+          liked: false,
+        });
+      });
+  });
+});
 
 // PATCH:
 // 200 etc

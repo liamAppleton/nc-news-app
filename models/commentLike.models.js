@@ -38,4 +38,19 @@ const addCommentLike = ({ username, comment_id, liked }) => {
   });
 };
 
-module.exports = { fetchCommentLike, addCommentLike };
+const updateCommentLike = ({ username, comment_id, liked }) => {
+  return db
+    .query(
+      `
+        UPDATE comment_likes
+        SET liked = $1
+        WHERE username = $2 and comment_id = $3
+        RETURNING *`,
+      [liked, username, comment_id]
+    )
+    .then(({ rows }) => {
+      return rows[0];
+    });
+};
+
+module.exports = { fetchCommentLike, addCommentLike, updateCommentLike };

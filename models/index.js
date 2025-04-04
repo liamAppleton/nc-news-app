@@ -10,7 +10,11 @@ const {
 } = require('./articles.models');
 const { updateCommentById, removeComment } = require('./comments.models');
 const { fetchUsers, fetchUserByUsername } = require('./users.models');
-const { fetchCommentLike, addCommentLike } = require('./commentLike.models');
+const {
+  fetchCommentLike,
+  addCommentLike,
+  updateCommentLike,
+} = require('./commentLike.models');
 
 module.exports = {
   fetchTopics,
@@ -28,4 +32,5 @@ module.exports = {
   fetchUserByUsername,
   fetchCommentLike,
   addCommentLike,
+  updateCommentLike,
 };

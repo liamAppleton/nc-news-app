@@ -11,6 +11,12 @@ const {
 } = require('./articles.controllers');
 const { patchCommentById, deleteComment } = require('./comments.controllers');
 const { getUsers, getUserByUsername } = require('./users.controllers');
+const {
+  getCommentLike,
+  postCommentLike,
+  patchCommentLike,
+  deleteCommentLike,
+} = require('./commentLike.controllers');
 
 module.exports = {
   getEndpoints,
@@ -27,4 +33,8 @@ module.exports = {
   deleteComment,
   getUsers,
   getUserByUsername,
+  getCommentLike,
+  postCommentLike,
+  patchCommentLike,
+  deleteCommentLike,
 };

@@ -20,22 +20,22 @@ const fetchCommentLike = (username, comment_id) => {
 };
 
 const addCommentLike = ({ username, comment_id, liked }) => {
-  const promises = [
+  return Promise.all([
     checkExists('users', 'username', username),
     checkExists('comments', 'comment_id', comment_id),
-  ];
-
-  const queryString = format(
-    `INSERT INTO comment_likes
-        (username, comment_id, liked)
-        VALUES %L RETURNING *`,
-    [[username, comment_id, liked]]
-  );
-  promises.unshift(db.query(queryString));
-
-  return Promise.all(promises).then(([{ rows }]) => {
-    return rows[0];
-  });
+  ])
+    .then(() => {
+      const queryString = format(
+        `INSERT INTO comment_likes
+          (username, comment_id, liked)
+          VALUES %L RETURNING *`,
+        [[username, comment_id, liked]]
+      );
+      return db.query(queryString);
+    })
+    .then(({ rows }) => {
+      return rows[0];
+    });
 };
 
 const updateCommentLike = (username, comment_id, liked) => {

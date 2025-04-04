@@ -63,7 +63,7 @@ describe('GET /api/comment-likes/:username/:comment_id', () => {
 describe('POST /api/comment-likes/', () => {
   let newLike;
   beforeEach(() => {
-    newLike = { username: 'lurker', comment_id: 10, liked: true };
+    newLike = { username: 'butter_bridge', comment_id: 10, liked: true };
   });
   test('201: Responds with the posted like object', () => {
     return request(app)
@@ -72,7 +72,7 @@ describe('POST /api/comment-likes/', () => {
       .expect(201)
       .then(({ body: { commentLike } }) => {
         expect(commentLike).toEqual({
-          username: 'lurker',
+          username: 'butter_bridge',
           comment_id: 10,
           liked: true,
         });

@@ -189,7 +189,7 @@ describe('DELETE: /api/comment-likes/:username/:comment_id', () => {
           expect(body.msg).toBe('bad request');
         });
     });
-    test.only('404: Responds with "resource not found" when passed a username that does not exist', () => {
+    test('404: Responds with "resource not found" when passed a username that does not exist', () => {
       return request(app)
         .delete('/api/comment-likes/banana/1')
         .expect(404)
@@ -198,10 +198,9 @@ describe('DELETE: /api/comment-likes/:username/:comment_id', () => {
           expect(body.msg).toBe('resource not found');
         });
     });
-    test.skip('404: Responds with "resource not found" when passed a comment_id that does not exist', () => {
+    test('404: Responds with "resource not found" when passed a comment_id that does not exist', () => {
       return request(app)
-        .patch('/api/comment-likes/butter_bridge/9999')
-        .send({ liked: false })
+        .delete('/api/comment-likes/butter_bridge/9999')
         .expect(404)
         .then(({ body }) => {
           expect(body.status).toBe(404);

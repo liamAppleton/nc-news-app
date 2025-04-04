@@ -60,14 +60,14 @@ describe('GET /api/comment-likes/:username/:comment_id', () => {
   });
 });
 
-describe('POST /api/comment-likes/:username/:comment_id', () => {
+describe('POST /api/comment-likes/', () => {
   let newLike;
   beforeEach(() => {
     newLike = { username: 'lurker', comment_id: 10, liked: true };
   });
   test('201: Responds with the posted like object', () => {
     return request(app)
-      .post('/api/comment-likes/lurker/10')
+      .post('/api/comment-likes')
       .send(newLike)
       .expect(201)
       .then(({ body: { commentLike } }) => {
@@ -82,7 +82,7 @@ describe('POST /api/comment-likes/:username/:comment_id', () => {
     test('400: Responds with "bad request" when passed an invalid comment_id', () => {
       newLike['comment_id'] = 'banana';
       return request(app)
-        .post('/api/comment-likes/lurker/banana')
+        .post('/api/comment-likes')
         .send(newLike)
         .expect(400)
         .then(({ body }) => {
@@ -93,7 +93,7 @@ describe('POST /api/comment-likes/:username/:comment_id', () => {
     test('404: Responds with "resource not found" when passed a username that does not exist', () => {
       newLike.username = 'banana';
       return request(app)
-        .post('/api/comment-likes/banana/10')
+        .post('/api/comment-likes')
         .send(newLike)
         .expect(404)
         .then(({ body }) => {
@@ -104,7 +104,7 @@ describe('POST /api/comment-likes/:username/:comment_id', () => {
     test('404: Responds with "resource not found" when passed a comment_id that does not exist', () => {
       newLike['comment_id'] = 9999;
       return request(app)
-        .post('/api/comment-likes/lurker/9999')
+        .post('/api/comment-likes')
         .send(newLike)
         .expect(404)
         .then(({ body }) => {

@@ -22,6 +22,17 @@ describe('GET /api/users/:username/:comment_id', () => {
         });
       });
   });
+  describe('error handling', () => {
+    test('400: Responds with "bad request" when passed an invalid comment_id', () => {
+      return request(app)
+        .get('/api/users/butter_bridge/banana')
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.status).toBe(400);
+          expect(body.msg).toBe('bad request');
+        });
+    });
+  });
 });
 
 // GET:

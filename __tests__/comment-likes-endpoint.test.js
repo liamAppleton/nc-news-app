@@ -180,7 +180,7 @@ describe('DELETE: /api/comment-likes/:username/:comment_id', () => {
       .expect(204);
   });
   describe('error handling', () => {
-    test.only('400: Responds with "bad request" when passed an invalid comment_id', () => {
+    test('400: Responds with "bad request" when passed an invalid comment_id', () => {
       return request(app)
         .delete('/api/comment-likes/butter_bridge/banana')
         .expect(400)
@@ -189,10 +189,9 @@ describe('DELETE: /api/comment-likes/:username/:comment_id', () => {
           expect(body.msg).toBe('bad request');
         });
     });
-    test.skip('404: Responds with "resource not found" when passed a username that does not exist', () => {
+    test.only('404: Responds with "resource not found" when passed a username that does not exist', () => {
       return request(app)
-        .patch('/api/comment-likes/banana/1')
-        .send({ liked: false })
+        .delete('/api/comment-likes/banana/1')
         .expect(404)
         .then(({ body }) => {
           expect(body.status).toBe(404);

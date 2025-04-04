@@ -7,8 +7,6 @@ const data = require('../db/data/test-data');
 beforeEach(() => seed(data));
 afterAll(() => db.end());
 
-// /api/users/:username/:comment_id
-
 describe('GET /api/comment-likes/:username/:comment_id', () => {
   test('200: Responds with the comment-like object associated with the requested parameters', () => {
     return request(app)
@@ -144,7 +142,7 @@ describe('PATCH: /api/comment-likes/:username/:comment_id', () => {
     });
     test('404: Responds with "resource not found" when passed a username that does not exist', () => {
       return request(app)
-        .patch('/api/comment-likes/banana/10')
+        .patch('/api/comment-likes/banana/1')
         .send({ liked: false })
         .expect(404)
         .then(({ body }) => {
@@ -160,6 +158,16 @@ describe('PATCH: /api/comment-likes/:username/:comment_id', () => {
         .then(({ body }) => {
           expect(body.status).toBe(404);
           expect(body.msg).toBe('resource not found');
+        });
+    });
+    test('400: Responds with "bad request" when passed an invalid send value', () => {
+      return request(app)
+        .patch('/api/comment-likes/butter_bridge/1')
+        .send({ liked: 'banana' })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.status).toBe(400);
+          expect(body.msg).toBe('bad request');
         });
     });
   });

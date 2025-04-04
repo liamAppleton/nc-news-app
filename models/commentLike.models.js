@@ -58,8 +58,8 @@ const updateCommentLike = (username, comment_id, liked) => {
 
 const removeCommentLike = (username, comment_id) => {
   const promises = [
-    checkExists('users', 'username', username),
-    checkExists('comments', 'comment_id', comment_id),
+    checkExists('comment_likes', 'username', username),
+    checkExists('comment_likes', 'comment_id', comment_id),
   ];
   promises.push(
     db.query(

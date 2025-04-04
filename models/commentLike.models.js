@@ -56,15 +56,21 @@ const updateCommentLike = (username, comment_id, liked) => {
     });
 };
 
-const removeCommentLike = ({ username, comment_id }) => {
-  return db
-    .query(
+const removeCommentLike = (username, comment_id) => {
+  const promises = [
+    checkExists('users', 'username', username),
+    checkExists('comments', 'comment_id', comment_id),
+  ];
+  promises.push(
+    db.query(
       `DELETE FROM comment_likes WHERE username = $1 and comment_id = $2`,
       [username, comment_id]
     )
-    .then(() => {
-      return;
-    });
+  );
+
+  return Promise.all(promises).then(() => {
+    return;
+  });
 };
 
 module.exports = {

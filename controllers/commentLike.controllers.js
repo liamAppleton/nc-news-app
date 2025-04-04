@@ -35,9 +35,11 @@ const patchCommentLike = (req, res, next) => {
 
 const deleteCommentLike = (req, res, next) => {
   const { username, comment_id } = req.params;
-  removeCommentLike(username, comment_id).then(() => {
-    res.status(204).send();
-  });
+  removeCommentLike(username, comment_id)
+    .then(() => {
+      res.status(204).send();
+    })
+    .catch((err) => next(err));
 };
 
 module.exports = {

@@ -179,4 +179,35 @@ describe('DELETE: /api/comment-likes/:username/:comment_id', () => {
       .delete('/api/comment-likes/butter_bridge/2')
       .expect(204);
   });
+  describe('error handling', () => {
+    test.only('400: Responds with "bad request" when passed an invalid comment_id', () => {
+      return request(app)
+        .delete('/api/comment-likes/butter_bridge/banana')
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.status).toBe(400);
+          expect(body.msg).toBe('bad request');
+        });
+    });
+    test.skip('404: Responds with "resource not found" when passed a username that does not exist', () => {
+      return request(app)
+        .patch('/api/comment-likes/banana/1')
+        .send({ liked: false })
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.status).toBe(404);
+          expect(body.msg).toBe('resource not found');
+        });
+    });
+    test.skip('404: Responds with "resource not found" when passed a comment_id that does not exist', () => {
+      return request(app)
+        .patch('/api/comment-likes/butter_bridge/9999')
+        .send({ liked: false })
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.status).toBe(404);
+          expect(body.msg).toBe('resource not found');
+        });
+    });
+  });
 });

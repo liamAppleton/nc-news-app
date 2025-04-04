@@ -1,4 +1,4 @@
-const { fetchCommentLike } = require('../models');
+const { fetchCommentLike, addCommentLike } = require('../models');
 
 const getCommentLike = (req, res, next) => {
   const { username, comment_id } = req.params;
@@ -9,4 +9,11 @@ const getCommentLike = (req, res, next) => {
     .catch((err) => next(err));
 };
 
-module.exports = { getCommentLike };
+const postCommentLike = (req, res, next) => {
+  const { body } = req;
+  addCommentLike(body).then((commentLike) => {
+    res.status(201).send({ commentLike });
+  });
+};
+
+module.exports = { getCommentLike, postCommentLike };

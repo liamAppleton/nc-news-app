@@ -62,11 +62,29 @@ describe('GET /api/users/:username/:comment_id', () => {
   });
 });
 
-// GET:
-// 200, 404 user not found, 404 comment not found, 404 like not found, 400 bad request
-
+describe('POST /api/users/:username/:comment_id', () => {
+  let newLike;
+  beforeEach(() => {
+    newLike = { username: 'lurker', comment_id: 10, liked: true };
+  });
+  test('201: Responds with the posted like object', () => {
+    return request(app)
+      .post('/api/users/lurker/10')
+      .send(newLike)
+      .expect(201)
+      .then(({ body: { commentLike } }) => {
+        expect(commentLike).toEqual({
+          username: 'lurker',
+          comment_id: 10,
+          liked: true,
+        });
+      });
+  });
+});
 // POST:
 // 201, 404 user not found, 404 comment not found, 404 like not found, 400 bad request
 
 // PATCH:
 // 200 etc
+
+// DELETE

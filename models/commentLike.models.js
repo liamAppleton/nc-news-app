@@ -1,5 +1,5 @@
 const db = require('../db/connection');
-const { checkExists } = require('../db/seeds/utils');
+const format = require('pg-format');
 
 const fetchCommentLike = (username, comment_id) => {
   const promises = [];
@@ -18,4 +18,16 @@ const fetchCommentLike = (username, comment_id) => {
   });
 };
 
-module.exports = { fetchCommentLike };
+const addCommentLike = ({ username, comment_id, liked }) => {
+  const queryString = format(
+    `INSERT INTO comment_likes
+    (username, comment_id, liked)
+    VALUES %L RETURNING *`,
+    [[username, comment_id, liked]]
+  );
+  return db.query(queryString).then(({ rows }) => {
+    return rows[0];
+  });
+};
+
+module.exports = { fetchCommentLike, addCommentLike };

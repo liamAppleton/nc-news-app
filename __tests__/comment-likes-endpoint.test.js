@@ -131,6 +131,40 @@ describe('PATCH: /api/comment-likes/:username/:comment_id', () => {
         });
       });
   });
+  describe('error handling', () => {
+    test.only('400: Responds with "bad request" when passed an invalid comment_id', () => {
+      return request(app)
+        .patch('/api/comment-likes/lurker/banana')
+        .send({ liked: false })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.status).toBe(400);
+          expect(body.msg).toBe('bad request');
+        });
+    });
+    test('404: Responds with "resource not found" when passed a username that does not exist', () => {
+      newLike.username = 'banana';
+      return request(app)
+        .post('/api/comment-likes/banana/10')
+        .send(newLike)
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.status).toBe(404);
+          expect(body.msg).toBe('resource not found');
+        });
+    });
+    test('404: Responds with "resource not found" when passed a comment_id that does not exist', () => {
+      newLike['comment_id'] = 9999;
+      return request(app)
+        .post('/api/comment-likes/lurker/9999')
+        .send(newLike)
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.status).toBe(404);
+          expect(body.msg).toBe('resource not found');
+        });
+    });
+  });
 });
 
 // PATCH:

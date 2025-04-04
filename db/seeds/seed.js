@@ -135,8 +135,8 @@ const createCommentLikes = (commentLikesData) => {
       );
       const queryString = format(
         `INSERT INTO comment_likes 
-      (username, comment_id, liked)
-      VALUES %L RETURNING *`,
+        (username, comment_id, liked)
+        VALUES %L RETURNING *`,
         formattedCommentLikeData
       );
       return db.query(queryString);

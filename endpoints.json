@@ -134,7 +134,7 @@
         "avatar_url": "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4"
     }
   },
-  "GET /api/comment-liked/:username/:comment_id": {
+  "GET /api/comment-likes/:username/:comment_id": {
     "description": "serves a commentLike object with the requested username and comment_id",
     "exampleResponse": {
       "username": "grumpy19",
@@ -142,7 +142,7 @@
       "liked": false
     }
   },
-  "POST /api/comment-liked/:username/:comment_id": {
+  "POST /api/comment-likes/:username/:comment_id": {
     "description": "adds a commentLike to the database and responds with the added object",
     "exampleResponse": {
       "username": "grumpy19",
@@ -150,7 +150,7 @@
       "liked": false
     }
   },
-  "PATCH /api/comment-liked/:username/:comment_id": {
+  "PATCH /api/comment-likes/:username/:comment_id": {
     "description": "updated liked for a commentLike object and responds with the updated object",
     "exampleResponse": {
       "username": "grumpy19",
@@ -158,7 +158,7 @@
       "liked": true
     }
   },
-  "DELETE /api/comment-liked/:username/:comment_id": {
+  "DELETE /api/comment-likes/:username/:comment_id": {
     "description": "removed the commentLike object with the requested username and comment_id",
     "exampleResponse": {}
   }

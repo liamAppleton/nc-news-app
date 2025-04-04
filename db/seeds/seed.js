@@ -121,9 +121,38 @@ const createComments = (commentData, articleData) => {
     });
 };
 
-const seed = ({ topicData, userData, articleData, commentData }) => {
+const createCommentLikes = (commentLikesData) => {
   return db
-    .query(`DROP TABLE IF EXISTS comments`)
+    .query(
+      `CREATE TABLE comment_likes
+  (username VARCHAR REFERENCES users(username), comment_id INT REFERENCES comments(comment_id) ON DELETE CASCADE, liked BOOLEAN, PRIMARY KEY (username, comment_id))`
+    )
+    .then(() => {
+      const formattedCommentLikeData = commentLikesData.map(
+        ({ username, comment_id, liked }) => {
+          return [username, comment_id, liked];
+        }
+      );
+      const queryString = format(
+        `INSERT INTO comment_likes 
+      (username, comment_id, liked)
+      VALUES %L RETURNING *`,
+        formattedCommentLikeData
+      );
+      return db.query(queryString);
+    });
+};
+
+const seed = ({
+  topicData,
+  userData,
+  articleData,
+  commentData,
+  commentLikesData,
+}) => {
+  return db
+    .query(`DROP TABLE IF EXISTS comment_likes`)
+    .then(() => db.query(`DROP TABLE IF EXISTS comments`))
     .then(() => db.query(`DROP TABLE IF EXISTS comments`))
     .then(() => db.query(`DROP TABLE IF EXISTS articles`))
     .then(() => db.query(`DROP TABLE IF EXISTS users`))
@@ -133,7 +162,8 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
     .then(() => createArticles(articleData))
     .then(({ rows }) => {
       return createComments(commentData, rows);
-    });
+    })
+    .then(() => createCommentLikes(commentLikesData));
 };
 
 module.exports = seed;

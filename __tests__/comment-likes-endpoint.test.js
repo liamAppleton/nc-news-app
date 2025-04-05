@@ -115,10 +115,10 @@ describe('POST /api/comment-likes/', () => {
   });
 });
 
-describe('PATCH: /api/comment-likes/:username/:comment_id', () => {
+describe('PUT: /api/comment-likes/:username/:comment_id', () => {
   test('200: Responds with the updated comment-like object', () => {
     return request(app)
-      .patch('/api/comment-likes/butter_bridge/1')
+      .put('/api/comment-likes/butter_bridge/1')
       .send({ liked: false })
       .expect(200)
       .then(({ body: { commentLike } }) => {
@@ -132,7 +132,7 @@ describe('PATCH: /api/comment-likes/:username/:comment_id', () => {
   describe('error handling', () => {
     test('400: Responds with "bad request" when passed an invalid comment_id', () => {
       return request(app)
-        .patch('/api/comment-likes/butter_bridge/banana')
+        .put('/api/comment-likes/butter_bridge/banana')
         .send({ liked: false })
         .expect(400)
         .then(({ body }) => {
@@ -142,7 +142,7 @@ describe('PATCH: /api/comment-likes/:username/:comment_id', () => {
     });
     test('404: Responds with "resource not found" when passed a username that does not exist in comment_likes', () => {
       return request(app)
-        .patch('/api/comment-likes/banana/1')
+        .put('/api/comment-likes/banana/1')
         .send({ liked: false })
         .expect(404)
         .then(({ body }) => {
@@ -152,7 +152,7 @@ describe('PATCH: /api/comment-likes/:username/:comment_id', () => {
     });
     test('404: Responds with "resource not found" when passed a comment_id that does not exist in comment_likes', () => {
       return request(app)
-        .patch('/api/comment-likes/butter_bridge/9999')
+        .put('/api/comment-likes/butter_bridge/9999')
         .send({ liked: false })
         .expect(404)
         .then(({ body }) => {
@@ -162,7 +162,7 @@ describe('PATCH: /api/comment-likes/:username/:comment_id', () => {
     });
     test('400: Responds with "bad request" when passed an invalid send value', () => {
       return request(app)
-        .patch('/api/comment-likes/butter_bridge/1')
+        .put('/api/comment-likes/butter_bridge/1')
         .send({ liked: 'banana' })
         .expect(400)
         .then(({ body }) => {

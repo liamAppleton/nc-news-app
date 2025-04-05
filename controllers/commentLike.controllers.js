@@ -23,7 +23,7 @@ const postCommentLike = (req, res, next) => {
     .catch((err) => next(err));
 };
 
-const patchCommentLike = (req, res, next) => {
+const putCommentLike = (req, res, next) => {
   const { liked } = req.body;
   const { username, comment_id } = req.params;
   updateCommentLike(username, comment_id, liked)
@@ -45,6 +45,6 @@ const deleteCommentLike = (req, res, next) => {
 module.exports = {
   getCommentLike,
   postCommentLike,
-  patchCommentLike,
+  putCommentLike,
   deleteCommentLike,
 };

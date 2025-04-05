@@ -1,7 +1,7 @@
 const {
   getCommentLike,
   postCommentLike,
-  patchCommentLike,
+  putCommentLike,
   deleteCommentLike,
 } = require('../controllers');
 
@@ -12,7 +12,7 @@ commentLikesRouter.route('/').post(postCommentLike);
 commentLikesRouter
   .route('/:username/:comment_id')
   .get(getCommentLike)
-  .patch(patchCommentLike)
+  .put(putCommentLike)
   .delete(deleteCommentLike);
 
 module.exports = commentLikesRouter;

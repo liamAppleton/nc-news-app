@@ -6,11 +6,11 @@ const {
 
 const commentLikesRouter = require('express').Router();
 
-commentLikesRouter.route('/').get(getCommentLikes);
+commentLikesRouter.route('/').get(getCommentLikes).put(putCommentLike);
 
 commentLikesRouter
   .route('/:username/:comment_id')
-  .put(putCommentLike)
+
   .delete(deleteCommentLike);
 
 module.exports = commentLikesRouter;

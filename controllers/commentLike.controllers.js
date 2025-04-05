@@ -13,8 +13,7 @@ const getCommentLikes = (req, res, next) => {
 };
 
 const putCommentLike = (req, res, next) => {
-  const { liked } = req.body;
-  const { username, comment_id } = req.params;
+  const { username, comment_id, liked } = req.body;
   updateCommentLike(username, comment_id, liked)
     .then((commentLike) => {
       res.status(200).send({ commentLike });

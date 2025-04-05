@@ -28,11 +28,15 @@ describe('GET /api/comment-likes', () => {
   });
 });
 
-describe('PUT: /api/comment-likes/:username/:comment_id', () => {
+describe('PUT: /api/comment-likes', () => {
+  let newLike;
+  beforeEach(() => {
+    newLike = { username: 'butter_bridge', comment_id: 1, liked: false };
+  });
   test('200: Responds with the updated comment-like object', () => {
     return request(app)
-      .put('/api/comment-likes/butter_bridge/1')
-      .send({ liked: false })
+      .put('/api/comment-likes')
+      .send(newLike)
       .expect(200)
       .then(({ body: { commentLike } }) => {
         expect(commentLike).toEqual({
@@ -43,9 +47,10 @@ describe('PUT: /api/comment-likes/:username/:comment_id', () => {
       });
   });
   test('200: Works when passed "null" for liked value', () => {
+    newLike.liked = null;
     return request(app)
-      .put('/api/comment-likes/butter_bridge/1')
-      .send({ liked: null })
+      .put('/api/comment-likes')
+      .send(newLike)
       .expect(200)
       .then(({ body: { commentLike } }) => {
         expect(commentLike).toEqual({
@@ -57,9 +62,10 @@ describe('PUT: /api/comment-likes/:username/:comment_id', () => {
   });
   describe('error handling', () => {
     test('400: Responds with "bad request" when passed an invalid comment_id', () => {
+      newLike['comment_id'] = 'banana';
       return request(app)
-        .put('/api/comment-likes/butter_bridge/banana')
-        .send({ liked: false })
+        .put('/api/comment-likes')
+        .send(newLike)
         .expect(400)
         .then(({ body }) => {
           expect(body.status).toBe(400);
@@ -67,9 +73,10 @@ describe('PUT: /api/comment-likes/:username/:comment_id', () => {
         });
     });
     test('404: Responds with "resource not found" when passed a username that does not exist', () => {
+      newLike.username = 'banana';
       return request(app)
-        .put('/api/comment-likes/banana/1')
-        .send({ liked: false })
+        .put('/api/comment-likes')
+        .send(newLike)
         .expect(404)
         .then(({ body }) => {
           expect(body.status).toBe(404);
@@ -77,9 +84,10 @@ describe('PUT: /api/comment-likes/:username/:comment_id', () => {
         });
     });
     test('404: Responds with "resource not found" when passed a comment_id that does', () => {
+      newLike['comment_id'] = 9999;
       return request(app)
-        .put('/api/comment-likes/butter_bridge/9999')
-        .send({ liked: false })
+        .put('/api/comment-likes')
+        .send(newLike)
         .expect(404)
         .then(({ body }) => {
           expect(body.status).toBe(404);
@@ -87,9 +95,10 @@ describe('PUT: /api/comment-likes/:username/:comment_id', () => {
         });
     });
     test('400: Responds with "bad request" when passed an invalid send value', () => {
+      newLike.liked = 'banana';
       return request(app)
-        .put('/api/comment-likes/butter_bridge/1')
-        .send({ liked: 'banana' })
+        .put('/api/comment-likes')
+        .send(newLike)
         .expect(400)
         .then(({ body }) => {
           expect(body.status).toBe(400);

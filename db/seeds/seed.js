@@ -5,6 +5,7 @@ const {
   createLookUp,
   formatDataWithId,
 } = require('./utils.js');
+const { articleLikesData } = require('../data/test-data/index.js');
 
 const createTopics = (topicData) => {
   return db
@@ -143,17 +144,41 @@ const createCommentLikes = (commentLikesData) => {
     });
 };
 
+const createArticleLikes = (articleLikesData) => {
+  return db
+    .query(
+      `CREATE TABLE article_likes
+    (username VARCHAR REFERENCES users(username), article_id INT REFERENCES articles(article_id) ON DELETE CASCADE, liked BOOLEAN, PRIMARY KEY (username, article_id))`
+    )
+    .then(() => {
+      const formattedArticleLikeData = articleLikesData.map(
+        ({ username, article_id, liked }) => {
+          return [username, article_id, liked];
+        }
+      );
+      const queryString = format(
+        `INSERT INTO article_likes
+        (username, article_id, liked)
+        VALUES %L RETURNING *`,
+        formattedArticleLikeData
+      );
+      return db.query(queryString);
+    });
+};
+
 const seed = ({
   topicData,
   userData,
   articleData,
   commentData,
   commentLikesData,
+  articleLikesData,
 }) => {
   return db
     .query(`DROP TABLE IF EXISTS comment_likes`)
+
     .then(() => db.query(`DROP TABLE IF EXISTS comments`))
-    .then(() => db.query(`DROP TABLE IF EXISTS comments`))
+    .then(() => db.query(`DROP TABLE IF EXISTS article_likes`))
     .then(() => db.query(`DROP TABLE IF EXISTS articles`))
     .then(() => db.query(`DROP TABLE IF EXISTS users`))
     .then(() => db.query(`DROP TABLE IF EXISTS topics`))
@@ -163,6 +188,7 @@ const seed = ({
     .then(({ rows }) => {
       return createComments(commentData, rows);
     })
+    .then(() => createArticleLikes(articleLikesData))
     .then(() => createCommentLikes(commentLikesData));
 };
 

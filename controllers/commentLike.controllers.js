@@ -1,14 +1,13 @@
 const {
-  fetchCommentLike,
+  fetchCommentLikes,
   updateCommentLike,
   removeCommentLike,
 } = require('../models');
 
-const getCommentLike = (req, res, next) => {
-  const { username, comment_id } = req.params;
-  fetchCommentLike(username, comment_id)
-    .then((commentLike) => {
-      res.status(200).send({ commentLike });
+const getCommentLikes = (req, res, next) => {
+  fetchCommentLikes()
+    .then((commentLikes) => {
+      res.status(200).send({ commentLikes });
     })
     .catch((err) => next(err));
 };
@@ -33,7 +32,7 @@ const deleteCommentLike = (req, res, next) => {
 };
 
 module.exports = {
-  getCommentLike,
+  getCommentLikes,
   putCommentLike,
   deleteCommentLike,
 };

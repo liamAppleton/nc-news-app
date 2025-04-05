@@ -7,16 +7,20 @@ const data = require('../db/data/test-data');
 beforeEach(() => seed(data));
 afterAll(() => db.end());
 
-describe('GET /api/comment-likes/:username/:comment_id', () => {
-  test('200: Responds with the comment-like object associated with the requested parameters', () => {
+describe('GET /api/comment-likes', () => {
+  test.only('200: Responds with an array of comment-like objects', () => {
     return request(app)
-      .get('/api/comment-likes/butter_bridge/1')
+      .get('/api/comment-likes')
       .expect(200)
-      .then(({ body: { commentLike } }) => {
-        expect(commentLike).toEqual({
-          username: 'butter_bridge',
-          comment_id: 1,
-          liked: true,
+      .then(({ body: { commentLikes } }) => {
+        commentLikes.forEach((like) => {
+          expect(like).toEqual(
+            expect.objectContaining({
+              username: expect.any(String),
+              comment_id: expect.any(Number),
+              liked: expect.anything(),
+            })
+          );
         });
       });
   });

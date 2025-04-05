@@ -1,14 +1,15 @@
 const {
-  getCommentLike,
+  getCommentLikes,
   putCommentLike,
   deleteCommentLike,
 } = require('../controllers');
 
 const commentLikesRouter = require('express').Router();
 
+commentLikesRouter.route('/').get(getCommentLikes);
+
 commentLikesRouter
   .route('/:username/:comment_id')
-  .get(getCommentLike)
   .put(putCommentLike)
   .delete(deleteCommentLike);
 

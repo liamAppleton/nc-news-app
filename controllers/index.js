@@ -12,8 +12,7 @@ const {
 const { patchCommentById, deleteComment } = require('./comments.controllers');
 const { getUsers, getUserByUsername } = require('./users.controllers');
 const {
-  getCommentLike,
-  postCommentLike,
+  getCommentLikes,
   putCommentLike,
   deleteCommentLike,
 } = require('./commentLike.controllers');
@@ -33,8 +32,7 @@ module.exports = {
   deleteComment,
   getUsers,
   getUserByUsername,
-  getCommentLike,
-  postCommentLike,
+  getCommentLikes,
   putCommentLike,
   deleteCommentLike,
 };

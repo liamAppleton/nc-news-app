@@ -46,6 +46,20 @@ describe('PUT /api/article-likes', () => {
         });
       });
   });
+  test('200: Works when passed "null" for liked value', () => {
+    newLike.liked = null;
+    return request(app)
+      .put('/api/article-likes')
+      .send(newLike)
+      .expect(200)
+      .then(({ body: { articleLike } }) => {
+        expect(articleLike).toEqual({
+          username: 'butter_bridge',
+          article_id: 1,
+          liked: null,
+        });
+      });
+  });
 });
 
 // describe('DELETE /api/article-likes/:username/:article_id');

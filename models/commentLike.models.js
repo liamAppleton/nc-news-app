@@ -39,8 +39,12 @@ const addCommentLike = ({ username, comment_id, liked }) => {
 };
 
 const updateCommentLike = (username, comment_id, liked) => {
-  return db
-    .query(
+  const promises = [
+    checkExists('users', 'username', username),
+    checkExists('comments', 'comment_id', comment_id),
+  ];
+  promises.unshift(
+    db.query(
       `
         UPDATE comment_likes
         SET liked = $1
@@ -48,12 +52,11 @@ const updateCommentLike = (username, comment_id, liked) => {
         RETURNING *`,
       [liked, username, comment_id]
     )
-    .then(({ rows }) => {
-      if (rows.length === 0) {
-        return Promise.reject({ status: 404, msg: 'resource not found' });
-      }
-      return rows[0];
-    });
+  );
+
+  return Promise.all(promises).then(([{ rows }]) => {
+    return rows[0];
+  });
 };
 
 const removeCommentLike = (username, comment_id) => {

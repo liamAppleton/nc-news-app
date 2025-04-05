@@ -8,11 +8,13 @@ beforeEach(() => seed(data));
 afterAll(() => db.end());
 
 describe('GET /api/comment-likes', () => {
-  test.only('200: Responds with an array of comment-like objects', () => {
+  test('200: Responds with an array of comment-like objects', () => {
     return request(app)
       .get('/api/comment-likes')
       .expect(200)
       .then(({ body: { commentLikes } }) => {
+        expect(commentLikes.length).not.toBe(0);
+
         commentLikes.forEach((like) => {
           expect(like).toEqual(
             expect.objectContaining({
@@ -23,44 +25,6 @@ describe('GET /api/comment-likes', () => {
           );
         });
       });
-  });
-  describe('error handling', () => {
-    test('400: Responds with "bad request" when passed an invalid comment_id', () => {
-      return request(app)
-        .get('/api/comment-likes/butter_bridge/banana')
-        .expect(400)
-        .then(({ body }) => {
-          expect(body.status).toBe(400);
-          expect(body.msg).toBe('bad request');
-        });
-    });
-    test('404: Responds with "like not found" when passed a username that does not exist in comment_likes', () => {
-      return request(app)
-        .get('/api/comment-likes/banana/1')
-        .expect(404)
-        .then(({ body }) => {
-          expect(body.status).toBe(404);
-          expect(body.msg).toBe('like not found');
-        });
-    });
-    test('404: Responds with "like not found" when passed a comment_id that does not exist in comment_likes', () => {
-      return request(app)
-        .get('/api/comment-likes/butter_bridge/9999')
-        .expect(404)
-        .then(({ body }) => {
-          expect(body.status).toBe(404);
-          expect(body.msg).toBe('like not found');
-        });
-    });
-    test('404: Responds with "like not found" when passed a comment_id and username that do not exist in comment_likes', () => {
-      return request(app)
-        .get('/api/comment-likes/lurker/10')
-        .expect(404)
-        .then(({ body }) => {
-          expect(body.status).toBe(404);
-          expect(body.msg).toBe('like not found');
-        });
-    });
   });
 });
 

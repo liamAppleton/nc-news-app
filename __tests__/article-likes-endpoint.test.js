@@ -94,6 +94,17 @@ describe('PUT /api/article-likes', () => {
           expect(body.msg).toBe('resource not found');
         });
     });
+    test('400: Responds with "bad request" when passed an invalid send value', () => {
+      newLike.liked = 'banana';
+      return request(app)
+        .put('/api/article-likes')
+        .send(newLike)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.status).toBe(400);
+          expect(body.msg).toBe('bad request');
+        });
+    });
   });
 });
 

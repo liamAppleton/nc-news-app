@@ -5,6 +5,7 @@ const endpointsRouter = require('./endpoints.router');
 const topicsRouter = require('./topics.router');
 const usersRouter = require('./users.router');
 const commentLikesRouter = require('./comment-likes.router');
+const articleLikesRouter = require('./article-likes.router');
 
 apiRouter.use('/', endpointsRouter);
 
@@ -17,5 +18,7 @@ apiRouter.use('/articles', articlesRouter);
 apiRouter.use('/comments', commentsRouter);
 
 apiRouter.use('/comment-likes', commentLikesRouter);
+
+apiRouter.use('/article-likes', articleLikesRouter);
 
 module.exports = apiRouter;

@@ -72,6 +72,17 @@ describe('PUT /api/article-likes', () => {
           expect(body.msg).toBe('bad request');
         });
     });
+    test('404: Responds with "resource not found" when passed a username that does not exist', () => {
+      newLike.username = 'banana';
+      return request(app)
+        .put('/api/article-likes')
+        .send(newLike)
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.status).toBe(404);
+          expect(body.msg).toBe('resource not found');
+        });
+    });
   });
 });
 

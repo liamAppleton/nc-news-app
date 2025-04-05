@@ -83,6 +83,17 @@ describe('PUT /api/article-likes', () => {
           expect(body.msg).toBe('resource not found');
         });
     });
+    test('404: Responds with "resource not found" when passed an article_id that does', () => {
+      newLike['article_id'] = 9999;
+      return request(app)
+        .put('/api/article-likes')
+        .send(newLike)
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.status).toBe(404);
+          expect(body.msg).toBe('resource not found');
+        });
+    });
   });
 });
 

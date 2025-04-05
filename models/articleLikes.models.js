@@ -30,4 +30,21 @@ const updateArticleLike = (username, article_id, liked) => {
   });
 };
 
-module.exports = { fetchArticleLikes, updateArticleLike };
+const removeArticleLike = (username, article_id) => {
+  const promises = [
+    checkExists('article_likes', 'username', username),
+    checkExists('article_likes', 'article_id', article_id),
+  ];
+  promises.push(
+    db.query(
+      `DELETE FROM article_likes WHERE username = $1 and article_id = $2`,
+      [username, article_id]
+    )
+  );
+
+  return Promise.all(promises).then(() => {
+    return;
+  });
+};
+
+module.exports = { fetchArticleLikes, updateArticleLike, removeArticleLike };

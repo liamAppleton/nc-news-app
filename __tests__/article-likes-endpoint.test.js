@@ -108,4 +108,10 @@ describe('PUT /api/article-likes', () => {
   });
 });
 
-// describe('DELETE /api/article-likes/:username/:article_id');
+describe('DELETE /api/article-likes/:username/:article_id', () => {
+  test('204: Responds with 204 status code', () => {
+    return request(app)
+      .delete('/api/article-likes/butter_bridge/2')
+      .expect(204);
+  });
+});

@@ -176,7 +176,6 @@ const seed = ({
 }) => {
   return db
     .query(`DROP TABLE IF EXISTS comment_likes`)
-
     .then(() => db.query(`DROP TABLE IF EXISTS comments`))
     .then(() => db.query(`DROP TABLE IF EXISTS article_likes`))
     .then(() => db.query(`DROP TABLE IF EXISTS articles`))

@@ -15,7 +15,8 @@ const {
   getCommentLikes,
   putCommentLike,
   deleteCommentLike,
-} = require('./commentLike.controllers');
+} = require('./commentLikes.controllers');
+const { getArticleLikes } = require('./articleLikes.controllers');
 
 module.exports = {
   getEndpoints,
@@ -35,4 +36,5 @@ module.exports = {
   getCommentLikes,
   putCommentLike,
   deleteCommentLike,
+  getArticleLikes,
 };

@@ -28,7 +28,7 @@ describe('GET /api/comment-likes', () => {
   });
 });
 
-describe('PUT: /api/comment-likes', () => {
+describe('PUT /api/comment-likes', () => {
   let newLike;
   beforeEach(() => {
     newLike = { username: 'butter_bridge', comment_id: 1, liked: false };
@@ -108,7 +108,7 @@ describe('PUT: /api/comment-likes', () => {
   });
 });
 
-describe('DELETE: /api/comment-likes/:username/:comment_id', () => {
+describe('DELETE /api/comment-likes/:username/:comment_id', () => {
   test('204: Responds with 204 status code', () => {
     return request(app)
       .delete('/api/comment-likes/butter_bridge/2')

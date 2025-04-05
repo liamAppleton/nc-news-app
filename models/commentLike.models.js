@@ -15,11 +15,13 @@ const updateCommentLike = (username, comment_id, liked) => {
   promises.unshift(
     db.query(
       `
-        UPDATE comment_likes
-        SET liked = $1
-        WHERE username = $2 and comment_id = $3
-        RETURNING *`,
-      [liked, username, comment_id]
+    INSERT INTO comment_likes (username, comment_id, liked)
+    VALUES ($1, $2, $3)
+    ON CONFLICT (username, comment_id)
+    DO UPDATE SET liked = EXCLUDED.liked
+    RETURNING *;
+  `,
+      [username, comment_id, liked]
     )
   );
 

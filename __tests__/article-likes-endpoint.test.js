@@ -114,4 +114,33 @@ describe('DELETE /api/article-likes/:username/:article_id', () => {
       .delete('/api/article-likes/butter_bridge/2')
       .expect(204);
   });
+  describe('error handling', () => {
+    test('400: Responds with "bad request" when passed an invalid article_id', () => {
+      return request(app)
+        .delete('/api/article-likes/butter_bridge/banana')
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.status).toBe(400);
+          expect(body.msg).toBe('bad request');
+        });
+    });
+    test('404: Responds with "resource not found" when passed a username that does not exist in article_likes', () => {
+      return request(app)
+        .delete('/api/article-likes/banana/1')
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.status).toBe(404);
+          expect(body.msg).toBe('resource not found');
+        });
+    });
+    test('404: Responds with "resource not found" when passed an article_id that does not exist in article_likes', () => {
+      return request(app)
+        .delete('/api/article-likes/butter_bridge/9999')
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.status).toBe(404);
+          expect(body.msg).toBe('resource not found');
+        });
+    });
+  });
 });

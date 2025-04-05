@@ -15,7 +15,10 @@ const {
   updateCommentLike,
   removeCommentLike,
 } = require('./commentLikes.models');
-const { fetchArticleLikes } = require('./articleLikes.models');
+const {
+  fetchArticleLikes,
+  updateArticleLike,
+} = require('./articleLikes.models');
 
 module.exports = {
   fetchTopics,
@@ -35,4 +38,5 @@ module.exports = {
   updateCommentLike,
   removeCommentLike,
   fetchArticleLikes,
+  updateArticleLike,
 };

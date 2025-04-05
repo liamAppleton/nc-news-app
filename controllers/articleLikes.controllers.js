@@ -1,4 +1,4 @@
-const { fetchArticleLikes } = require('../models');
+const { fetchArticleLikes, updateArticleLike } = require('../models');
 
 const getArticleLikes = (req, res, next) => {
   fetchArticleLikes()
@@ -8,4 +8,13 @@ const getArticleLikes = (req, res, next) => {
     .catch((err) => next(err));
 };
 
-module.exports = { getArticleLikes };
+const putArticleLike = (req, res, next) => {
+  const { username, article_id, liked } = req.body;
+  updateArticleLike(username, article_id, liked)
+    .then((articleLike) => {
+      res.status(200).send({ articleLike });
+    })
+    .catch((err) => next(err));
+};
+
+module.exports = { getArticleLikes, putArticleLike };

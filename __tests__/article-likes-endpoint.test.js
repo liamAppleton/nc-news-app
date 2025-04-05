@@ -28,6 +28,24 @@ describe('GET /api/article-likes', () => {
   });
 });
 
-// describe('PUT /api/article-likes');
+describe('PUT /api/article-likes', () => {
+  let newLike;
+  beforeEach(() => {
+    newLike = { username: 'butter_bridge', article_id: 1, liked: false };
+  });
+  test('200: Responds with the updated article-like object', () => {
+    return request(app)
+      .put('/api/article-likes')
+      .send(newLike)
+      .expect(200)
+      .then(({ body: { articleLike } }) => {
+        expect(articleLike).toEqual({
+          username: 'butter_bridge',
+          article_id: 1,
+          liked: false,
+        });
+      });
+  });
+});
 
 // describe('DELETE /api/article-likes/:username/:article_id');

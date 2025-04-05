@@ -1,6 +1,5 @@
 const {
   fetchCommentLike,
-  addCommentLike,
   updateCommentLike,
   removeCommentLike,
 } = require('../models');
@@ -10,15 +9,6 @@ const getCommentLike = (req, res, next) => {
   fetchCommentLike(username, comment_id)
     .then((commentLike) => {
       res.status(200).send({ commentLike });
-    })
-    .catch((err) => next(err));
-};
-
-const postCommentLike = (req, res, next) => {
-  const { body } = req;
-  addCommentLike(body)
-    .then((commentLike) => {
-      res.status(201).send({ commentLike });
     })
     .catch((err) => next(err));
 };
@@ -44,7 +34,6 @@ const deleteCommentLike = (req, res, next) => {
 
 module.exports = {
   getCommentLike,
-  postCommentLike,
   putCommentLike,
   deleteCommentLike,
 };

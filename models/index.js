@@ -10,16 +10,6 @@ const {
 } = require('./articles.models');
 const { updateCommentById, removeComment } = require('./comments.models');
 const { fetchUsers, fetchUserByUsername } = require('./users.models');
-const {
-  fetchCommentLikes,
-  updateCommentLike,
-  removeCommentLike,
-} = require('./commentLikes.models');
-const {
-  fetchArticleLikes,
-  updateArticleLike,
-  removeArticleLike,
-} = require('./articleLikes.models');
 
 module.exports = {
   fetchTopics,
@@ -35,10 +25,4 @@ module.exports = {
   removeComment,
   fetchUsers,
   fetchUserByUsername,
-  fetchCommentLikes,
-  updateCommentLike,
-  removeCommentLike,
-  fetchArticleLikes,
-  updateArticleLike,
-  removeArticleLike,
 };

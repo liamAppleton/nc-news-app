@@ -12,6 +12,12 @@ It may take a little longer to load initially while the server warms up.
 
 ## Setup instructions
 
+Clone down this repo using the following command:
+
+**git clone https://github.com/liamAppleton/nc-news-app.git**
+
+Access the directory: **cd nc-news-app**
+
 Once the repo is cloned onto your local machine, you'll need to take the following steps to get things working:
 
 Firstly, run **npm install** to install the correct dependencies.

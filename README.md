@@ -6,6 +6,8 @@ NC News is a fully hosted Express.js server. Users can interact with the databas
 
 Check out the hosted version here: https://nc-news-app-e2hd.onrender.com/api
 
+It may take a little longer to load initially while the server warms up.
+
 ---
 
 ## Setup instructions

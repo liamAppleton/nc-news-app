@@ -48,7 +48,6 @@
   },
   "GET /api/articles/:article_id": {
     "description": "serves an article object with requested article id",
-    "queries": ["limit", "p"],
     "exampleResponse": {
       "title": "Seafood substitutions are increasing",
       "topic": "cooking",
@@ -61,6 +60,7 @@
   },
   "GET /api/articles/:article_id/comments": {
     "description": "serves an array of comments with requested article id",
+    "queries": ["limit", "p"],
     "exampleResponse": {
       "comment_id": 4,
       "article_id": 1,

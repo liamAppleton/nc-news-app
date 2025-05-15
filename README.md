@@ -2,7 +2,7 @@
 
 ## About this project
 
-NC News is a fully hosted Express.js server. Users can interact with the database via the various endpoints which facilitate CRUD operations.
+NC News is a fully hosted Express.js server. Users can interact with the PostgreSQL database via the various endpoints which facilitate CRUD operations.
 
 Check out the hosted version here: https://nc-news-app-e2hd.onrender.com/api
 
